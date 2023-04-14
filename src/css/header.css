@@ -1,0 +1,103 @@
+.header {
+    display: grid;
+    grid-template-columns: 245px auto 120px;
+    align-items: center;
+
+    padding: 5px 20px;
+    height: 60px;
+    background-color: transparent;
+}
+
+.header_logo {
+    width: 100px;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+    .header_logo:hover {
+        cursor: pointer;
+    }
+
+    .header_logo img {
+        width : 40px;
+    }
+
+    .header_logo span {
+        font-size: 22px;
+        font-weight: 500;
+        margin-left: 10px;
+        color: gray;
+    }
+
+.header_search {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    width: 700px;
+    background-color: #edf2fc;
+    padding: 12px;
+    border-radius: 50px;
+}
+
+.header_search:hover {
+    cursor: pointer;
+}
+
+.header_search input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    padding-bottom: 2px;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+    .header_search span {
+        display: flex;
+        align-items: center;
+        margin: 0px 9px;
+        width: 35px;
+        height: 35px;
+        border-radius: 50px;
+        
+    }
+    .header_search span:hover {
+        background-color: #dfe4ed;
+    }
+    .header_search span .MuiSvgIcon-root {
+        height:25px;
+        margin: auto;
+    }
+
+.header_options {
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .header_options span {
+        display: flex;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        
+        border-radius: 50px;
+    }
+    .header_options span:hover {
+        background-color: #e6e7ea;
+        cursor: pointer;
+    }
+
+    .header_options .MuiSvgIcon-root {
+        padding : 7px;
+        color: #444746;
+        margin: auto;
+    }
+
+    .header_options_avatar .MuiSvgIcon-root{
+        padding: 0px;
+    }

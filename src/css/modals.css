@@ -1,0 +1,740 @@
+.MuiSvgIcon-root {
+    color: #555;
+}
+
+
+#f_make_pop_overlay {
+    z-index: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #ffffff00;
+    position: fixed;
+    top:0px;
+    left:0px;
+}
+
+.f_make_pop {
+    position: fixed;
+    top:82px;
+    left:15px;
+    height: 130px;
+    width: 270px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0px 1.78px 8px #ccc;
+
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .f_make_pop hr {
+        background-color: #55555522;
+        box-shadow: 0;
+        height: 1px;
+        border: none;
+        width: 100%;
+    }
+
+.f_make_folder_create, 
+.f_make_folder_upload,
+.f_make_file_upload {
+    cursor: pointer;
+    display: grid;
+    align-items: center;
+
+    grid-template-columns: 30% auto;
+    height: 35px;
+    width: 100%;
+
+}
+
+    .f_make_image .MuiSvgIcon-root {
+        margin-top: 5px;
+        height: 19px;
+        margin-left: 30px;
+    }
+
+    .f_make_folder_create:hover, 
+    .f_make_folder_upload:hover,
+    .f_make_file_upload:hover {
+        background-color: whitesmoke;
+    }
+
+.f_make_whitespace {
+    height: 22px;
+    width: 100%;
+    border-radius: 15px;
+
+    background-color: white;
+}
+
+.f_make_option {
+    font-size: 18px;
+    margin-bottom: 2px;
+    font-weight:500;
+}
+
+
+/* Uploading */
+
+.uploadStatus {
+    position: fixed;
+    bottom:0px;
+    right:30px;
+    height: 300px;
+    width: 350px;
+    background-color: rgb(255, 255, 255);
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    box-shadow: 0px 1.78px 8px #ccc;
+
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .uploadStatus_min {
+        height: 50px;
+        display: block;
+    }
+
+.uploadStatus_header {
+    height: 50px !important;
+    width: 100%;
+
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-around;
+
+    background-color: #f7f9fc;
+}
+
+    .uploadStatus_header_display span {
+        font-weight: 600;
+        margin-left: 10px;
+    }
+
+    .uploadStatus_header_buttons {
+        width: 20%;
+        margin-left: 100px;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .uploadStatus_header_pop,
+    .uploadStatus_header_close {
+        cursor: pointer;
+
+        width: 30px;
+        height: 30px;
+        
+        border-radius: 100px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+        .uploadStatus_header_pop .MuiSvgIcon-root {
+            height:21px;
+            }
+        .uploadStatus_header_pop:hover,
+        .uploadStatus_header_close:hover {
+            background-color: #e7e8ea;
+        }
+
+.uploadStatus_body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    width: 100%;
+    height: 250px !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+    .uploadStatus_body::-webkit-scrollbar {
+        display: none;
+    }
+
+    .uploadStatus_element {
+        cursor: pointer;
+        width: 100%;
+        padding: 5px 0px;
+        margin-top: 5px;
+
+        display: flex;
+        background-color: rgb(255, 255, 255);
+        justify-content: space-around;
+        align-items: center;
+    }
+
+            .uploadStatus_element:hover {
+                background-color: #ededed;
+            }
+
+        .uploadStatus_element_name {
+            margin-bottom: 5px;
+            font-size: 13px;
+            width:200px;
+            overflow-x: hidden;
+        }
+
+        .uploadStatus_element_progress {
+            width: 30px;
+            height: 30px;
+            border-radius: 100px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .uploadStatus_element_progress:hover {
+            background-color: #dcdcdc;
+        }
+
+
+/* Create Folder */
+
+.createFolderPopUp {
+    position: fixed;
+    z-index: 2;
+    background-color: rgba(90, 92, 92, 0.443);
+    width: 100%;
+    height: 100%;
+    top:0px;
+    left: 0px;
+}
+
+.createFolderPopUp_Popup {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: 200px;
+    width: 320px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0px 1.78px 8px #474646a7;
+    border: none;
+
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.cfp_prompt {
+    margin: 20px 20px 0px 31px;
+}
+
+    .cfp_prompt span {
+        font-size: 28px;
+        font-weight: 400;
+    }
+
+.cfp_input {
+    width: 260px;
+    height: 40px;
+    margin: 0px auto;
+
+    border:1px solid black;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: space-around;
+}
+
+    .cfp_input_highlighted {
+        border:1px solid blue;
+    }
+
+    .cfp_input input {
+        width: 210px;
+        display: block;
+        margin: auto;
+
+        font-size: 14px;
+        font-weight: 200;
+
+        border:none;
+        background-color: transparent;
+    }
+
+        .cfp_input input:focus {
+            outline:none;
+        }
+
+.cfp_buttons {
+    display: flex;
+    margin-left: 45%;
+    margin-right: 7%;
+    margin-bottom: 2px;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+    .cfp_button_enter,
+    .cfp_button_cancel {
+        width: 80px;
+        height: 40px;
+        border-radius: 20px;
+
+        display: flex;
+        align-items: center;
+    }
+
+        .cfp_button_enter:hover,
+        .cfp_button_cancel:hover {
+            background-color: aliceblue;
+            cursor: pointer;
+        }
+
+        .cfp_button_enter span,
+        .cfp_button_cancel span {
+            margin: auto;
+
+            font-weight: 600;
+            color: #4c6fd3;
+        }
+
+
+/* Confirmation Delete */
+
+.confirmDeletePopUp {
+    position: absolute;
+    background-color: rgba(90, 92, 92, 0.443);
+    width: 100%;
+    height: 100%;
+    top:0px;
+}
+
+.confirmDeletePopUp_Popup {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 250px;
+    width: 500px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0px 1.78px 8px #474646a7;
+    border: none;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.cdp_prompt {
+    margin: 20px 20px 0px 31px;
+}
+
+    .cdp_prompt span {
+        font-size: 28px;
+        font-weight: 400;
+    }
+
+.cdp_message {
+    width: 410px;
+    height: 40px;
+    margin: 0px auto;
+
+    display: flex;
+    justify-content: space-around;
+}
+
+.cdp_buttons {
+    display: flex;
+    margin-left: 45%;
+    margin-right: 1%;
+    margin-bottom: 2px;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+    .cdp_button_confirm,
+    .cdp_button_cancel {
+        width: 80px;
+        height: 40px;
+        border-radius: 30px;
+
+        display: flex;
+        align-items: center;
+    }
+
+    .cdp_button_confirm {
+        width:150px;
+        height: 50px;
+
+        background-color: #4c6fd3;
+    }
+
+        .cdp_button_confirm:hover {
+            background-color: #1151b7;
+            cursor: pointer;
+
+            box-shadow: 0px 1.78px 8px #4746465a;
+        }
+        .cdp_button_cancel:hover {
+            background-color: aliceblue;
+            cursor: pointer;
+        }
+
+        
+        .cdp_button_confirm span,
+        .cdp_button_cancel span {
+            margin: auto;
+
+            font-weight: 600;
+            color: #4c6fd3;
+        }
+        .cdp_button_confirm span {
+            color: white;
+        }
+
+/* File/Folder Operations */
+
+.f_select_pop {
+    position: fixed;
+    top:20px;
+    left:300px;
+    height: 355px;
+    width: 270px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0px 1.78px 8px #ccc;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .f_select_pop hr {
+        background-color: rgb(237, 229, 219);
+        box-shadow: 0;
+        height: 1px;
+        border: none;
+        width: 100%;
+    }
+
+.f_select_share, 
+.f_select_link,
+.f_select_move,
+.f_select_star,
+.f_select_rename,
+.f_select_copy,
+.f_select_download,
+.f_select_file_remove {
+    cursor: pointer;
+    display: grid;
+    align-items: center;
+
+    grid-template-columns: 30% auto;
+    height: 35px;
+    width: 100%;
+
+}
+
+    .f_select_image .MuiSvgIcon-root {
+        margin-top: 5px;
+        height: 19px;
+        margin-left: 30px;
+    }
+
+    .f_select_share:hover, 
+    .f_select_link:hover,
+    .f_select_move:hover,
+    .f_select_star:hover,
+    .f_select_rename:hover,
+    .f_select_copy:hover,
+    .f_select_download:hover,
+    .f_select_file_remove:hover {
+        background-color: whitesmoke;
+    }
+
+.f_select_whitespace {
+    height: 22px;
+    width: 100%;
+    border-radius: 15px;
+
+    background-color: white;
+}
+
+.f_select_option {
+    font-size: 18px;
+    margin-bottom: 2px;
+    font-weight:500;
+}
+
+/* Share */
+
+.share_overlay {
+    position: fixed;
+    z-index: 2;
+    background-color: rgba(90, 92, 92, 0.443);
+    width: 100%;
+    height: 100%;
+    top:0px;
+    left: 0px;
+}
+
+.share_pop {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: 200px;
+    width: 320px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0px 1.78px 8px #474646a7;
+    border: none;
+
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.share_text {
+    font-weight: 300;
+    font-size: 20px;
+    margin: 20px;
+}
+
+.share_buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    margin-left: 150px;
+    margin-right: 20px;
+}
+
+    .share_btn_cancel,
+    .share_btn_share {
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 400;
+        color: white;
+        background-color: #5a85db;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+    .share_btn_cancel {
+        border: 0.5px solid rgb(146, 146, 146);
+        background-color: white;
+        color: #5a85db;
+        
+    }
+    .share_btn_cancel:hover {
+        background-color: #f5f8fd;
+    }
+    
+    .share_btn_share:hover {
+        background-color: #1151b7;
+    }
+
+.share_warning {
+    padding: 2px 20px;
+    width: 280px;
+    font-size: 7px;
+    font-weight: 400;
+    background-color: rgba(128, 128, 128, 0.116);
+    color: rgba(0, 0, 0, 0.792);
+}
+
+/* Search Options */
+
+
+/* Sign IN */
+
+.signInPop {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 280px;
+    width: 400px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5%;
+    box-shadow: 0px 1.78px 8px #474646a7;
+    border: none;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+    .signInPop_logo {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: 90px;
+        width: 230px;
+    }
+
+        .signInPop_logo span {
+            font-size: 50px;
+            font-weight: 600;
+            color: grey;
+        } 
+
+        .signInPop_logo img {
+            height: 100%;
+        }
+
+    .signInPop_Button {
+        margin-bottom: 30px;
+        padding: 20px 40px;
+        border-radius: 10px;
+        border: 0.5px solid rgba(128, 128, 128, 0.368);
+
+        color: #2171f2;
+        background-color: white;
+    }
+        .signInPop_Button:hover {
+            color: #174ea6;
+            background-color: #f6f9fe;
+            cursor: pointer;
+
+            border: 1px solid #2171f2;
+        }
+
+
+/* User Change */
+
+.userSwitchOverlay {
+    background-color: transparent;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0px;    
+
+    z-index: 0;
+}
+
+.userSwitch_Popup {
+    position: absolute;
+    top:100px;
+    right: 30px;
+    background-color: #f3f6fc;
+    border: 1px solid rgba(128, 128, 128, 0.368);
+    border-radius: 30px;
+    box-shadow: 0px 1.78px 8px #ccc;
+    height: 200px;
+    width: 350px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-around;
+    align-items: center;
+
+    z-index: 1;
+}
+
+.userSwitch_CurUserFlex {
+    display: flex;
+    flex-direction: row;
+
+    margin-top: 20px;
+
+    height: 95%;
+    width: 95%;
+
+    justify-content: space-around;
+    align-items: center;
+
+    border-radius: 15px;
+    background-color: white;
+}
+
+.userSwitch_Details {
+    width: 220px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-around;
+}
+    .userSwitch_Details_Name {
+        font-weight: 500;
+    }   
+
+    .userSwitch_Details_Mail {
+        font-weight: 300;
+    }
+
+.userSwitch_Icon {
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    background-color: #6e6e6e3c;
+
+    border-radius: 50px;
+    box-shadow: 0px 1.78px 8px #b6b4b484;
+}
+
+    .userSwitch_Icon .MuiSvgIcon-root {
+        width: 50px;
+        height: 50px;
+        background-color: rgb(145, 145, 145);
+
+        margin: auto 0px auto 3px;
+    }
+
+.userSwitch_bottompad {
+    width: 100%;
+    height: 50px;
+    border-top: 1px solid rgba(128, 128, 128, 0.142);
+}
+
+.userSwitch_Logout {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    height: 60px;
+    margin: 10px 0px;
+
+    justify-content: space-around;
+    align-items: center;
+}
+
+    .userSwitch_Logout span{
+        font-weight: 600;
+        width: 150px;
+    }
+    .userSwitch_Logout .MuiSvgIcon-root{
+        height: 20px;
+        margin-left: 70px;
+    }
+    .userSwitch_Logout:hover {
+        cursor: pointer;
+        background-color: #829ecb53;
+    }
