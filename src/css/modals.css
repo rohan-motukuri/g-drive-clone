@@ -411,8 +411,8 @@
 
 .f_select_pop {
     position: fixed;
-    top:20px;
-    left:300px;
+    top:140px;
+    right:100px;
     height: 355px;
     width: 270px;
     background-color: rgb(255, 255, 255);

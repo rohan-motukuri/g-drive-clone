@@ -50,6 +50,28 @@
             margin: auto;
         }
 
+    .window_header_buttons_options {
+        display: flex;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+
+        margin-top: 9px;
+    }
+        .window_header_buttons_options:hover { 
+            background-color: #ededed;
+            cursor: pointer;
+        }
+
+
+        .window_header_buttons_options .MuiSvgIcon-root {
+            height:50%;
+            margin: auto;
+        }
+.window_header_buttons {
+    display: flex;
+
+}
 
 .window_body {
     background-color: white;
@@ -182,7 +204,7 @@
 
     margin: 0px 8px 10px 8px;
     width: 100%;
-    grid-template-columns: 5% 40% 10% 30% 10% 5%;
+    grid-template-columns: 5% 30% 25% 30% 5% 5%;
     height: 22px;
 }
 

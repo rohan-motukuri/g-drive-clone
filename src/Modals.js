@@ -40,6 +40,20 @@ function Modals (props) {
 
     const [dummy, setDummy] = useState(false);
 
+    const stopSelectProcess = ()=>{
+        props.selected = [];
+    };
+    const shareProcess = ()=> {
+        stopSelectProcess();
+    };
+    const getLinkProcess = ()=> {};
+    const moveToProcess = () => {};
+    const starProcess = () => {};
+    const renameProcess = () => {};
+    const copyProcess = () => {};
+    const downloadProcess = () => {};
+    const removeProcess = () => {};
+
     const uploadFile = useRef(null);
     const onUploadFile=()=> {
         uploadFile.current.click();
@@ -247,10 +261,12 @@ function Modals (props) {
                 </div>
                 ) : (<p/>)}
             </div>); break;
-        case "fOptions" : returnee = (
+        case "fOptions" : {
+
+        } returnee = (
             <div className='f_select_pop'>
             <div className='f_select_whitespace'/>
-            <div className='f_select_share'>
+            <div className='f_select_share' onClick={shareProcess}>
                 <span className='f_select_image'>
                     <PersonAddRoundedIcon/>
                 </span>
@@ -258,7 +274,7 @@ function Modals (props) {
                     Share
                 </span>
             </div>
-            <div className='f_select_link'>
+            <div className='f_select_link' onClick={getLinkProcess}>
                 <span className='f_select_image'>
                     <InsertLinkRoundedIcon/>
                 </span>
@@ -266,7 +282,7 @@ function Modals (props) {
                     Get Link
                 </span>
             </div>
-            <div className='f_select_move'>
+            <div className='f_select_move' onClick={moveToProcess}>
                 <span className='f_select_image'>
                     <DriveFileMoveOutlinedIcon/>
                 </span>
@@ -274,7 +290,7 @@ function Modals (props) {
                     Move To
                 </span>
             </div>
-            <div className='f_select_star'>
+            <div className='f_select_star' onClick={starProcess}>
                 <span className='f_select_image'>
                     <StarBorderOutlinedIcon/>
                 </span>
@@ -282,7 +298,7 @@ function Modals (props) {
                     Star
                 </span>
             </div>
-            <div className='f_select_rename'>
+            <div className='f_select_rename' onClick={renameProcess}>
                 <span className='f_select_image'>
                     <DriveFileRenameOutlineOutlinedIcon/>
                 </span>
@@ -291,7 +307,7 @@ function Modals (props) {
                 </span>
             </div>
             <hr/>
-            <div className='f_select_copy'>
+            <div className='f_select_copy' onClick={copyProcess}>
                 <span className='f_select_image'>
                     <ContentCopyOutlinedIcon/>
                 </span>
@@ -299,7 +315,7 @@ function Modals (props) {
                     Make a Copy
                 </span>
             </div>
-            <div className='f_select_download'>
+            <div className='f_select_download' onClick={downloadProcess}>
                 <span className='f_select_image'>
                     <FileDownloadOutlinedIcon/>
                 </span>
@@ -308,7 +324,7 @@ function Modals (props) {
                 </span>
             </div>
             <hr/>
-            <div className='f_select_file_remove'>
+            <div className='f_select_file_remove' onClick={removeProcess}>
                 <span className='f_make_image'>
                     <DeleteIcon/>
                 </span>

@@ -14,7 +14,12 @@ import Modals from './Modals';
 import { db } from './firebase';
 
 
+
 function Window(props) {
+
+    const isEqualOrShared = (t) => {
+        return (t.data.user == props.user.email) || t.data.shared.includes(props.user.email);
+    }
     
     const [curDir, setCurDir] = useState("");
     const [grid, setGrid] = useState(true);
@@ -22,6 +27,7 @@ function Window(props) {
     const [selectView, setSelectView] = useState([]);
     const space = props.space[0];
     const [files, setFiles] = useState([]);
+    const [fOptions, setfoptions] = useState(false);
 
     const handleSelects=(e)=> {
         let indexToDelete;
@@ -154,16 +160,16 @@ function Window(props) {
                                     <span className='window_box_icon' onClick={()=>{handleSelects(Name+t.id);setSelectView([t.id + Name, true, !selectView[2]]);}}>
                                         {selectView[1] && selectView[0] == t.id + Name  ? <input id={Name+t.id} type="checkbox" checked={selectView[2]}/> : ((t.data.folder)? <FolderIcon/> : <InsertDriveFileIcon/>)}
                                     </span>
-                                    <span className='window_box_name' style={{overflow : 'clip'}}>
+                                    <span className='window_box_name' style={{overflowX : 'clip', overflowY : 'hidden', display:'block', height:'20px'}}>
                                         {t.data.filename}
                                     </span>
-                                    <span className='window_box_owner' style={{overflow : 'clip'}}>
-                                        {t.data.user == props.user.email && space == "my-drive" ? "Me" : props.user.displayName}
+                                    <span className='window_box_owner' style={{overflowX : 'clip', overflowY : 'hidden', display:'block', height:'20px'}}>
+                                        {t.data.user == props.user.email && space == "my-drive" ? "Me" : t.data.user}
                                     </span>
-                                    <span className='window_box_modified' >
+                                    <span className='window_box_modified' style={{overflowX : 'clip', overflowY : 'hidden', display:'block', height:'20px'}}>
                                         {new Date(t.data.timestamp?.seconds * 1000).toUTCString()}
                                     </span>
-                                    <span className='window_box_size'>
+                                    <span className='window_box_size' style={{overflowX : 'clip', overflowY : 'hidden', display:'block', height:'20px'}}>
                                         {formatBytes(t.data.size)}
                                     </span>
                                     <span className='window_box_options'>
@@ -186,15 +192,15 @@ function Window(props) {
         switch(space) {
             case "my-drive" : {
                 return [
-                    sectionDisplay("Suggested", files.filter(t => !t.data.folder && t.data.user == props.user.email && !t.data.trashed)
+                    sectionDisplay("Suggested", files.filter(t => !t.data.folder && isEqualOrShared(t) && !t.data.trashed)
                     .sort((a, b) => b.data.timestamp - a.data.timestamp), true),
                     
                     ((files.findIndex(t => t.data.folder && !t.data.trashed) != -1) ? 
-                        sectionDisplay("Folders", files.filter(t => t.data.folder && !t.data.trashed)
+                        sectionDisplay("Folders", files.filter(t => t.data.folder && !t.data.trashed && isEqualOrShared(t))
                             .sort(sortByLex), grid):null),
                     
                     ((files.findIndex(t => !t.data.folder ) != -1) ? 
-                        sectionDisplay("Files", files.filter(t=>!t.data.folder & !t.data.trashed)
+                        sectionDisplay("Files", files.filter(t=>!t.data.folder & !t.data.trashed && isEqualOrShared(t))
                             .sort(sortByLex), grid):null)
                     // (<>
                     //     <div className='tableHeadings' style={{display:"grid", gridTemplateColumns:"45% 10% 30% 15%"}}>
@@ -208,12 +214,6 @@ function Window(props) {
             } break;
             case "shared" : {
                 return [
-
-                    sectionDisplay("Suggested", files
-                        .filter(t => t.data.user != props.user.email 
-                                    && !t.data.trashed
-                                    && t.data.shared?.includes(props.user.email))
-                        .sort((a, b) => b.data.timestamp - a.data.timestamp), true),
 
                     sectionDisplay("Files", files
                         .filter(t => t.data.user != props.user.email 
@@ -257,6 +257,9 @@ function Window(props) {
 
     return (
     <div style={{width:100+"%"}}>
+      {
+        fOptions ? <Modals modalId = "fOptions" selected = {selects}/> : ""
+      }
       <div className='window_header'>
           <div className='window_header_heading'>
             {(space == "my-drive") ? (<>
@@ -270,9 +273,17 @@ function Window(props) {
             </>) : (space[0].toUpperCase() + space.substr(1))}
               
           </div>
-          {(space != "trash" && space != "storage") ? <div className='window_header_viewbutton' onClick={()=>setGrid(!grid)}>
-              {grid ? <ListIcon/> : <CalendarViewMonthIcon/>}
-          </div> : null}
+          <div className="window_header_buttons">
+            {
+                (selects.length ? <span className='window_header_buttons_options' onClick={()=>setfoptions(!fOptions)}>
+                <MoreVertIcon/>
+            </span> : "")
+            }
+            {(space != "trash" && space != "storage") ? <div className='window_header_viewbutton' onClick={()=>setGrid(!grid)}>
+                {grid ? <ListIcon/> : <CalendarViewMonthIcon/>}
+            </div> : null}
+          </div>
+
       </div>
       <div className='main-window'>
           <div className='window_body'>
