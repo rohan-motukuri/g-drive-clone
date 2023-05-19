@@ -38,24 +38,65 @@ function Modals (props) {
     const [newFolderModal, setNewFolderModal] = useState(false);
     const [newFolderPop, setNewFolderPop] = useState(true);
 
+    const [sharetoemailInput, setSharetoemailInput] = useState("");
+
     const [dummy, setDummy] = useState(false);
 
+    // Sharing Handling
+
     const stopSelectProcess = ()=>{
-        props.selected = [];
+        props.setSelects([]);
     };
+
+    const handleShareIpChange = (e) => {
+        setSharetoemailInput(e.target.value);
+    };
+
+    const handleShareClick = () => {
+        props.setProceedShare(sharetoemailInput);
+        props.setSharePop(false);
+    };
+
     const shareProcess = ()=> {
+        props.setSharePop(true);
+
+        if(props.proceedShare.length) {
+            props.selects.forEach(t => {
+                db.collection("files_db").doc(t.id)
+                .update({shared : [...t.data.shared, props.proceedShare]
+                        .filter((value, index, array)=>array.indexOf(value) === index)})
+            })
+        }
+
         stopSelectProcess();
+        props.setfoptions(false);
     };
+
+    // Star Handling
+
+    const starProcess = () => {
+        props.selects.forEach(t => {
+            db.collection("files_db").doc(t.id)
+            .update({starred : !t.data.starred})
+        });
+
+        // stopSelectProcess();
+        // props.setfoptions(false);
+    };
+    
+    // Rename Handling
+
+    const renameProcess = () => {};
+
     const getLinkProcess = ()=> {};
     const moveToProcess = () => {};
-    const starProcess = () => {};
-    const renameProcess = () => {};
+    
     const copyProcess = () => {};
     const downloadProcess = () => {};
     const removeProcess = () => {};
 
     const uploadFile = useRef(null);
-    const onUploadFile=()=> {
+    const onUploadFile=()=> { // https://www.youtube.com/watch?v=0AS9Gfd1j5s
         uploadFile.current.click();
         setNewFolderModal(false); 
     };
@@ -262,8 +303,9 @@ function Modals (props) {
                 ) : (<p/>)}
             </div>); break;
         case "fOptions" : {
-
-        } returnee = (
+            console.log("Hereeee")
+        }
+        returnee = (
             <div className='f_select_pop'>
             <div className='f_select_whitespace'/>
             <div className='f_select_share' onClick={shareProcess}>
@@ -274,7 +316,7 @@ function Modals (props) {
                     Share
                 </span>
             </div>
-            <div className='f_select_link' onClick={getLinkProcess}>
+            {/* <div className='f_select_link' onClick={getLinkProcess}>
                 <span className='f_select_image'>
                     <InsertLinkRoundedIcon/>
                 </span>
@@ -289,7 +331,7 @@ function Modals (props) {
                 <span className='f_select_option'>
                     Move To
                 </span>
-            </div>
+            </div> */}
             <div className='f_select_star' onClick={starProcess}>
                 <span className='f_select_image'>
                     <StarBorderOutlinedIcon/>
@@ -391,7 +433,7 @@ function Modals (props) {
         ); break;
         case "sharePop" : returnee = (
         <>
-            <div className='share_overlay'>
+            <div className='share_overlay' onClick={()=>props.setSharePop(false)}>
 
             </div>
             <div className='share_pop'>
@@ -401,15 +443,16 @@ function Modals (props) {
                 <div className={('cfp_input' + (ipShown ? (()=>{return(" cfp_input_highlighted")})(): ""))} 
                 onClick={()=>document.getElementById("inputFieldShareF").focus()}>
                     <input id="inputFieldShareF" 
-                    type="text" defaultValue="" 
-                    onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
-                    onBlur={()=>setIpShown(false)}/>
+                           type="text" defaultValue="" 
+                           onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
+                           onBlur={()=>setIpShown(false)}
+                           onChange={handleShareIpChange}/>
                 </div>
                 <div className='share_buttons'>
-                    <div className='share_btn_cancel'>
+                    <div className='share_btn_cancel' onClick={()=>props.setSharePop(false)}>
                         Cancel
                     </div>
-                    <div className='share_btn_share'>
+                    <div className='share_btn_share' onClick={() => handleShareClick()}>
                         Share
                     </div>
                 </div>

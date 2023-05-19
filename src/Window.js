@@ -27,18 +27,21 @@ function Window(props) {
     const [selectView, setSelectView] = useState([]);
     const space = props.space[0];
     const [files, setFiles] = useState([]);
-    const [fOptions, setfoptions] = useState(false);
+
+    const [fOptions, setfoptions] = useState(true);
+    const [sharePop, setSharePop] = useState(false);
+    const [proceedShare, setProceedShare] = useState("");
 
     const handleSelects=(e)=> {
         let indexToDelete;
-        if((indexToDelete = selects.findIndex(t => t == e)) != -1) {
+        if((indexToDelete = selects.findIndex(t => t.id == e.id)) != -1) {
             selects.splice(indexToDelete, 1);
             setSelects(selects)
             // document.getElementById(e).setAttribute('checked', false);
         }
         else {
             setSelects([...selects, e])
-            document.getElementById(e).setAttribute('checked', true);
+            document.getElementById("SelectsEligible" + e.id).setAttribute('checked', true);
         };
     }
 
@@ -103,11 +106,11 @@ function Window(props) {
                         if(t.data.folder) {
                             return <>
                                 <div key={"folder"+Name+i+t.data.dir+grid} 
-                                className={'window_box_card_texts' + ((selects.includes(Name+t.id)) ? " window_boxes_activated" : "")}
-                                onMouseEnter={()=>setSelectView([t.id + Name, true, selects.includes(Name+t.id)])}
+                                className={'window_box_card_texts' + ((selects.findIndex(selected => selected.id == t.id) != -1) ? " window_boxes_activated" : "")}
+                                onMouseEnter={()=>setSelectView([t.id + Name, true, selects.findIndex(selected => selected.id == t.id) != -1])}
                                 onMouseLeave={()=>setSelectView([t.id + Name, false])}>
-                                    <span className='window_box_icon' onClick={()=>{if(Name != "Suggested")handleSelects(Name+t.id);setSelectView([t.id + Name, true, !selectView[2]]);}}>
-                                        {Name != "Suggested" && selectView[1] && selectView[0] == t.id + Name ?<input id={Name+t.id} type="checkbox" checked={selectView[2]}/>:<InsertDriveFileIcon/>}
+                                    <span className='window_box_icon' onClick={()=>{if(Name != "Suggested")handleSelects();setSelectView([t.id + Name, true, !selectView[2]]);}}>
+                                        {Name != "Suggested" && selectView[1] && selectView[0] == t.id + Name ?<input id={"SelectsEligible"+t.id} type="checkbox" checked={selectView[2]}/>:<InsertDriveFileIcon/>}
                                     </span>
                                     <span className='window_box_name' style={{overflow : 'clip',...((Name == "Suggested") ? {width : 180+"px", marginRight:"10px"} : {})}}>
                                     {t.data.filename}
@@ -120,13 +123,13 @@ function Window(props) {
                         }
                         return <>
                             <div key={"files"+Name+i+t.data.dir+grid} 
-                                className={'window_box_card_file window_box_card' + ((selects.includes(Name+t.id)) ? " window_boxes_activated" : "")}
-                                onMouseEnter={()=>setSelectView([t.id + Name, true, selects.includes(Name+t.id)])}
+                                className={'window_box_card_file window_box_card' + ((selects.findIndex(selected => selected.id == t.id) != -1) ? " window_boxes_activated" : "")}
+                                onMouseEnter={()=>setSelectView([t.id + Name, true, selects.findIndex(selected => selected.id == t.id) != -1])}
                                 onMouseLeave={()=>setSelectView([t.id + Name, false])}
                                 >
                                 <div className='window_box_card_texts'>
-                                    <span className='window_box_icon' onClick={()=>{if(Name != "Suggested")handleSelects(Name+t.id);setSelectView([t.id + Name, true, !selectView[2]]);}}>
-                                        {Name != "Suggested" && selectView[1] && selectView[0] == t.id + Name ?<input id={Name+t.id} type="checkbox" checked={selectView[2]}/>:<InsertDriveFileIcon/>}
+                                    <span className='window_box_icon' onClick={()=>{if(Name != "Suggested")handleSelects(t);setSelectView([t.id + Name, true, !selectView[2]]);}}>
+                                        {Name != "Suggested" && selectView[1] && selectView[0] == t.id + Name ?<input id={"SelectsEligible"+t.id} type="checkbox" checked={selectView[2]}/>:<InsertDriveFileIcon/>}
                                     </span>
                                     <span className={'window_box_name'} 
                                     style={{overflow : 'clip',...((Name == "Suggested") ? {width : 180+"px", marginRight:"10px"} : {})}}>
@@ -153,12 +156,12 @@ function Window(props) {
                     Boxes.map((t, i) => {
                         return <>
                             <div key={"files"+Name+i+t.data.dir+grid}  
-                                className={'window_box_list' + ((selects.includes(Name+t.id)) ? " window_boxes_activated" : "")}
-                                onMouseEnter={()=>setSelectView([t.id + Name, true, selects.includes(Name+t.id)])}
+                                className={'window_box_list' + ((selects.findIndex(selected => selected.id == t.id) != -1) ? " window_boxes_activated" : "")}
+                                onMouseEnter={()=>setSelectView([t.id + Name, true, selects.findIndex(selected => selected.id == t.id) != -1])}
                                 onMouseLeave={()=>setSelectView([t.id + Name, false])}>
                                 <div className='window_box_list_texts'>
-                                    <span className='window_box_icon' onClick={()=>{handleSelects(Name+t.id);setSelectView([t.id + Name, true, !selectView[2]]);}}>
-                                        {selectView[1] && selectView[0] == t.id + Name  ? <input id={Name+t.id} type="checkbox" checked={selectView[2]}/> : ((t.data.folder)? <FolderIcon/> : <InsertDriveFileIcon/>)}
+                                    <span className='window_box_icon' onClick={()=>{handleSelects(t);setSelectView([t.id + Name, true, !selectView[2]]);}}>
+                                        {selectView[1] && selectView[0] == t.id + Name  ? <input id={"SelectsEligible" + t.id} type="checkbox" checked={selectView[2]}/> : ((t.data.folder)? <FolderIcon/> : <InsertDriveFileIcon/>)}
                                     </span>
                                     <span className='window_box_name' style={{overflowX : 'clip', overflowY : 'hidden', display:'block', height:'20px'}}>
                                         {t.data.filename}
@@ -258,7 +261,10 @@ function Window(props) {
     return (
     <div style={{width:100+"%"}}>
       {
-        fOptions ? <Modals modalId = "fOptions" selected = {selects}/> : ""
+        fOptions && proceedShare ? <Modals modalId = "fOptions" selects = {selects} setSelects = {setSelects} setfoptions = {setfoptions} setSharePop = {setSharePop} proceedShare = {proceedShare}/> : ""
+      } 
+      {
+        sharePop ? <Modals modalId = "sharePop" setSharePop = {setSharePop} setProceedShare = {setProceedShare}/> : ""
       }
       <div className='window_header'>
           <div className='window_header_heading'>
