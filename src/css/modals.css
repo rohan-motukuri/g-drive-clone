@@ -245,7 +245,7 @@
     }
 
 .cfp_input {
-    width: 260px;
+    width: 350px; /* Was 260px for folder creation, Being overwritten for share, rename, etc */
     height: 40px;
     margin: 0px auto;
 
@@ -261,7 +261,7 @@
     }
 
     .cfp_input input {
-        width: 210px;
+        width: 310px;
         display: block;
         margin: auto;
 
@@ -409,11 +409,26 @@
 
 /* File/Folder Operations */
 
-.f_select_pop {
+.f_select_pop_rename {
     position: fixed;
     top:140px;
     right:100px;
     height: 285px;
+    width: 270px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0px 1.78px 8px #ccc;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.f_select_pop_non_rename {
+    position: fixed;
+    top:140px;
+    right:100px;
+    height: 255px;
     width: 270px;
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
@@ -498,8 +513,8 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    height: 200px;
-    width: 320px;
+    height: 280px;
+    width: 420px;
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
     box-shadow: 0px 1.78px 8px #474646a7;
@@ -515,7 +530,7 @@
 .share_text {
     font-weight: 300;
     font-size: 20px;
-    margin: 20px;
+    margin: 20px 10px 0px 35px;
 }
 
 .share_buttons {
@@ -523,8 +538,8 @@
     flex-direction: row;
     justify-content: space-around;
 
-    margin-left: 150px;
-    margin-right: 20px;
+    margin-left: 200px;
+    margin-right: 25px;
 }
 
     .share_btn_cancel,
@@ -534,7 +549,7 @@
         font-weight: 400;
         color: white;
         background-color: #5a85db;
-        padding: 5px 10px;
+        padding: 10px 25px;
         border-radius: 20px;
     }
     .share_btn_cancel {
@@ -553,11 +568,13 @@
 
 .share_warning {
     padding: 2px 20px;
-    width: 280px;
-    font-size: 7px;
+    width: 380px;
+    height: 20px;
+    align-items: center;
+    font-size: 15px;
     font-weight: 400;
-    background-color: rgba(128, 128, 128, 0.116);
-    color: rgba(0, 0, 0, 0.792);
+    background-color: rgba(209, 203, 203, 0.116);
+    color: rgba(0, 0, 0, 0.781);
 }
 
 /* Search Options */

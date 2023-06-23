@@ -28,9 +28,11 @@ function Window(props) {
     const space = props.space[0];
     const [files, setFiles] = useState([]);
 
-    const [fOptions, setfoptions] = useState(true);
+    const [fOptions, setfoptions] = useState(false);
     const [sharePop, setSharePop] = useState(false);
     const [proceedShare, setProceedShare] = useState("");
+
+    const [renamePop, setRenamePop] = useState(false);
 
     const handleSelects=(e)=> {
         let indexToDelete;
@@ -261,10 +263,11 @@ function Window(props) {
     return (
     <div style={{width:100+"%"}}>
       {
-        fOptions && proceedShare ? <Modals modalId = "fOptions" selects = {selects} setSelects = {setSelects} setfoptions = {setfoptions} setSharePop = {setSharePop} proceedShare = {proceedShare}/> : ""
-      } 
-      {
-        sharePop ? <Modals modalId = "sharePop" setSharePop = {setSharePop} setProceedShare = {setProceedShare}/> : ""
+        fOptions ? <Modals modalId = "fOptions" selects = {selects} setSelects = {setSelects} setfoptions = {setfoptions} setSharePop = {setSharePop} proceedShare = {proceedShare} setRenamePop={setRenamePop}/> : ""
+      } {
+        sharePop ? <Modals modalId = "sharePop" selects = {selects} setSelects = {setSelects} setSharePop = {setSharePop} setProceedShare = {setProceedShare}/> : ""
+      } {
+        renamePop ? <Modals modalId = "renamePop" setRenamePop = {setRenamePop}/> : ""
       }
       <div className='window_header'>
           <div className='window_header_heading'>

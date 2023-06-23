@@ -39,6 +39,7 @@ function Modals (props) {
     const [newFolderPop, setNewFolderPop] = useState(true);
 
     const [sharetoemailInput, setSharetoemailInput] = useState("");
+    const [renameInput, setRenameInput] = useState("");
 
     const [dummy, setDummy] = useState(false);
 
@@ -53,22 +54,23 @@ function Modals (props) {
     };
 
     const handleShareClick = () => {
-        props.setProceedShare(sharetoemailInput);
+        let x = document.getElementById("inputFieldShareF").value;
+        let y = props.selects;
+        if(x.length) {
+            y.forEach(t => {
+                db.collection("files_db").doc(t.id)
+                .update({shared : [...t.data.shared, x]
+                        .filter((value, index, array)=>array.indexOf(value) === index)})
+            })
+            stopSelectProcess();
+        }
+        
         props.setSharePop(false);
     };
 
-    const shareProcess = ()=> {
+    const shareProcess = () => {
         props.setSharePop(true);
-
-        if(props.proceedShare.length) {
-            props.selects.forEach(t => {
-                db.collection("files_db").doc(t.id)
-                .update({shared : [...t.data.shared, props.proceedShare]
-                        .filter((value, index, array)=>array.indexOf(value) === index)})
-            })
-        }
-
-        stopSelectProcess();
+        
         props.setfoptions(false);
     };
 
@@ -77,16 +79,32 @@ function Modals (props) {
     const starProcess = () => {
         props.selects.forEach(t => {
             db.collection("files_db").doc(t.id)
-            .update({starred : !t.data.starred})
+            .update({starred : !t.data.starred});
         });
 
-        // stopSelectProcess();
-        // props.setfoptions(false);
+        stopSelectProcess();
+        props.setfoptions(false);
     };
     
     // Rename Handling
 
-    const renameProcess = () => {};
+    const renameProcess = () => {
+        props.setRenamePop(true);
+    };
+
+    const handleRenameIpChange = (e) => {
+        setRenameInput(e.target.value);
+    };
+
+    const handleRename = () => {
+        props.selects.forEach(t => {
+            db.collection("files_db").doc(t.id)
+            .update({filename : renameInput});
+        });
+
+        stopSelectProcess();
+        props.setfoptions(false);
+    }
 
     const getLinkProcess = ()=> {};
     const moveToProcess = () => {};
@@ -302,11 +320,8 @@ function Modals (props) {
                 </div>
                 ) : (<p/>)}
             </div>); break;
-        case "fOptions" : {
-            console.log("Hereeee")
-        }
-        returnee = (
-            <div className='f_select_pop'>
+        case "fOptions" : returnee = (
+            <div className={(props.selects.length == 1) ? 'f_select_pop_rename' : 'f_select_pop_non_rename'}>
             <div className='f_select_whitespace'/>
             <div className='f_select_share' onClick={shareProcess}>
                 <span className='f_select_image'>
@@ -340,14 +355,14 @@ function Modals (props) {
                     Star
                 </span>
             </div>
-            <div className='f_select_rename' onClick={renameProcess}>
+            {(props.selects.length == 1) ? <div className='f_select_rename' onClick={renameProcess}>
                 <span className='f_select_image'>
                     <DriveFileRenameOutlineOutlinedIcon/>
                 </span>
                 <span className='f_select_option'>
                     Rename
                 </span>
-            </div>
+            </div> : ""}
             <hr/>
             <div className='f_select_copy' onClick={copyProcess}>
                 <span className='f_select_image'>
@@ -438,7 +453,7 @@ function Modals (props) {
             </div>
             <div className='share_pop'>
                 <div className='share_text'>
-                    Share {props.shareFiles?.map(t => `"${props.shareFiles}"`)} with : 
+                    Share {props.selects?.length} files with : 
                 </div>
                 <div className={('cfp_input' + (ipShown ? (()=>{return(" cfp_input_highlighted")})(): ""))} 
                 onClick={()=>document.getElementById("inputFieldShareF").focus()}>
@@ -446,13 +461,13 @@ function Modals (props) {
                            type="text" defaultValue="" 
                            onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
                            onBlur={()=>setIpShown(false)}
-                           onChange={handleShareIpChange}/>
+                           /*onChange={handleShareIpChange}*//>
                 </div>
                 <div className='share_buttons'>
                     <div className='share_btn_cancel' onClick={()=>props.setSharePop(false)}>
                         Cancel
                     </div>
-                    <div className='share_btn_share' onClick={() => handleShareClick()}>
+                    <div className='share_btn_share' onClick={handleShareClick}>
                         Share
                     </div>
                 </div>
@@ -461,6 +476,35 @@ function Modals (props) {
                 </div>
             </div>
         </>); break;
+        case "renamePop" : returnee = (
+            <>
+            <div className='share_overlay' onClick={()=>props.setRenamePop(false)}>
+
+            </div>
+            <div className='share_pop'>
+                <div className='share_text'>
+                    Rename {props.selects ? props.selects[0].data.filename : ""} to : 
+                </div>
+                <div className={('cfp_input' + (ipShown ? (()=>{return(" cfp_input_highlighted")})(): ""))} 
+                onClick={()=>document.getElementById("inputFieldShareF").focus()}>
+                    <input id="inputFieldShareF" 
+                           type="text" defaultValue="" 
+                           onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
+                           onBlur={()=>setIpShown(false)}
+                           onChange={handleRenameIpChange}
+                           value={()=>props.selects ? props.selects[0].data.filename : ""}/>
+                </div>
+                <div className='share_buttons'>
+                    <div className='share_btn_cancel' onClick={()=>props.setRenamePop(false)}>
+                        Cancel
+                    </div>
+                    <div className='share_btn_share' onClick={() => handleRename()}>
+                        Rename
+                    </div>
+                </div>
+            </div>
+            </>
+        )
         case "search_preview" : returnee = (
         <>
             <div className='search_overlay'/>
