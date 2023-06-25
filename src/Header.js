@@ -28,7 +28,7 @@ function Header (props) {
           <span>
             <HelpOutlineIcon/>
           </span>
-          <span className='header_options_avatar'>
+          <span className='header_options_avatar' onClick={()=>props.setUserCard(true)}>
             <Avatar src={props.user.photoURL}/>
           </span>
         </div>

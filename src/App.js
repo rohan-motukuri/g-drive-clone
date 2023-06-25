@@ -22,6 +22,14 @@ function App() {
 
   const [space, setSpace] = useState("my-drive");
 
+  const [selects, setSelects] = useState([]);
+  const [fOptions, setfoptions] = useState(false);
+
+  const [usedMem, setUsedMem] = useState({str:"GB", byt:0});
+  const [thereMem, setThereMem] = useState({str:"100MB", byt:100000000});
+
+  const [userCard, setUserCard] = useState(false);
+
   const signIn= ()=> {
     auth.signInWithPopup(provider).then(({user}) => {
       setUser(user);
@@ -31,7 +39,7 @@ function App() {
   return user ? (
     <>
     <Modals modalId = "search_overlay" user={user}/>
-    <Header user={user} setUser={setUser} space={[space, setSpace]}/>
+    <Header user={user} setUser={setUser} space={[space, setSpace]} setUserCard = {setUserCard}/>
     <div className="App">
       <Sidebar uploaderLedge = {[uploading, setUploading]} 
                uploaderState = {[[umMin, setUMmin], [umClose,setUMclose]]}
@@ -39,10 +47,20 @@ function App() {
                dummy = {[dummy, setDummy]}
                metaUpload = {[metaupload, setMetaUpload]}
                user={user} setUser={setUser}
-               space={[space, setSpace]}/>
+               space={[space, setSpace]}
+               select = {[selects, setSelects]}
+               fopts = {[fOptions, setfoptions]}
+               usedMem = {usedMem}
+               thereMem = {thereMem}/>
       <Window
       user={user} setUser={setUser}
-      space={[space, setSpace]}/>
+      space={[space, setSpace]}
+      select = {[selects, setSelects]}
+      fopts = {[fOptions, setfoptions]}
+      setUsedMem = {setUsedMem}
+      setThereMem = {setThereMem}
+      userCard = {userCard}
+      setUserCard = {setUserCard}/>
     </div>
     </> 
   ) : (

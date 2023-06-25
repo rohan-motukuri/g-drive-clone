@@ -204,7 +204,7 @@
 
     margin: 0px 8px 10px 8px;
     width: 100%;
-    grid-template-columns: 5% 30% 25% 30% 5% 5%;
+    grid-template-columns: 5% 30% 25% 25% 7% 5% 3%;
     height: 22px;
 }
 
@@ -258,6 +258,20 @@
     .window_box_card_texts .window_box_icon:hover{
         background-color: #d1d5da;
     }
+
+.window_box_starredIndicator {
+    display: flex;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+}
+
+.window_box_starredIndicator .MuiSvgIcon-root {
+    margin: auto;
+    width: 18px;
+}
+
+
 .window_box_options {
     display: flex;
     align-items: center;

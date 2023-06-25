@@ -17,7 +17,7 @@
     position: fixed;
     top:82px;
     left:15px;
-    height: 130px;
+    height: 80px;
     width: 270px;
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
@@ -313,11 +313,13 @@
 /* Confirmation Delete */
 
 .confirmDeletePopUp {
-    position: absolute;
+    position: fixed;
+    z-index: 2;
     background-color: rgba(90, 92, 92, 0.443);
     width: 100%;
     height: 100%;
     top:0px;
+    left: 0px;
 }
 
 .confirmDeletePopUp_Popup {
@@ -325,6 +327,8 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+
+    z-index: 3;
 
     height: 250px;
     width: 500px;
@@ -353,8 +357,10 @@
     margin: 0px auto;
 
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: space-between;
 }
+
 
 .cdp_buttons {
     display: flex;
@@ -409,6 +415,21 @@
 
 /* File/Folder Operations */
 
+.f_select_pop_trash {
+    position: fixed;
+    top:140px;
+    right:100px;
+    height: 110px;
+    width: 270px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0px 1.78px 8px #ccc;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .f_select_pop_rename {
     position: fixed;
     top:140px;
@@ -428,7 +449,7 @@
     position: fixed;
     top:140px;
     right:100px;
-    height: 255px;
+    height: 215px;
     width: 270px;
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
@@ -494,6 +515,28 @@
     font-size: 18px;
     margin-bottom: 2px;
     font-weight:500;
+}
+
+.seperator_on_options {
+    border: 0;
+    clear:both;
+    display:block;
+    width: 96%;               
+    background-color:#e0e0db;
+    height: 1px;
+}
+
+/* Copy Pop */
+
+.copyPop {
+    position: fixed;
+    bottom:10px;
+    right:0px;
+    height: 50px;
+    width: 270px;
+    background-color:#fafa05;
+
+    z-index: 1;
 }
 
 /* Share */
@@ -642,23 +685,23 @@
 /* User Change */
 
 .userSwitchOverlay {
-    background-color: transparent;
-    position: absolute;
-    height: 100%;
+    position: fixed;
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0);
     width: 100%;
-    top: 0px;    
-
-    z-index: 0;
+    height: 100%;
+    top:0px;
+    left: 0px;
 }
 
 .userSwitch_Popup {
-    position: absolute;
-    top:100px;
+    position: fixed;
+    top:70px;
     right: 30px;
     background-color: #f3f6fc;
-    border: 1px solid rgba(128, 128, 128, 0.368);
+    border: 0.5px solid rgba(128, 128, 128, 0.116);
     border-radius: 30px;
-    box-shadow: 0px 1.78px 8px #ccc;
+    box-shadow: 0px 1.78px 8px #efe8e8cc;
     height: 200px;
     width: 350px;
 
@@ -668,7 +711,7 @@
     justify-content: space-around;
     align-items: center;
 
-    z-index: 1;
+    z-index: 3;
 }
 
 .userSwitch_CurUserFlex {
@@ -711,10 +754,10 @@
     align-items: center;
     justify-content: space-around;
 
-    background-color: #6e6e6e3c;
+    background-color: #efebeb3c;
 
     border-radius: 50px;
-    box-shadow: 0px 1.78px 8px #b6b4b484;
+    box-shadow: 0px 1.78px 8px #dedcdc84;
 }
 
     .userSwitch_Icon .MuiSvgIcon-root {
@@ -753,5 +796,45 @@
     }
     .userSwitch_Logout:hover {
         cursor: pointer;
-        background-color: #829ecb53;
+        background-color: #1a6ef61e;
     }
+
+/* File View */
+ 
+.file_viewer_overlay {
+    position: fixed;
+    z-index: 2;
+    background-color: rgba(90, 92, 92, 0.443);
+    width: 100%;
+    height: 100%;
+    top:0px;
+    left: 0px;
+}
+
+.file_viewer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: 700px;
+    width: 1000px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0px 1.78px 8px #474646a7;
+    border: none;
+
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.file_viewer_object {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+}
