@@ -26,16 +26,22 @@ This project is a Google Drive clone that aims to replicate both the functionali
 
 - Google account-based user authentication
 - Custom-built, visually appealing UI
-- File Upload functionality
+- File Upload functionality with live updating ledger
 - File Sharing capabilities
 - File Deletion
 - File Renaming
 - File Starring
 - File Search
 - File Preview
+- File Tabs
+- List and Box View options
+- Available Space Bar
+- Size Limiting Uploads
+
+These features effectively highlight the core functionalities of your project, showcasing a range of essential actions users can perform on their files within the Google Drive clone.
 
 ## Attributions
 
 - [Base Tutorial](https://www.youtube.com/watch?v=7BXU9qPGH2s) by [Camer Coder](https://www.youtube.com/@CamelCoder/featured)
-- [Material UI Icons](https://mui.com/material-ui/material-icons/?theme=Two+tone)
+- [Material UI Icons & Avatar](https://mui.com/material-ui/material-icons/?theme=Two+tone)
 - [File Icons](https://icons8.com)
