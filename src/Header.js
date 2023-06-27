@@ -32,7 +32,7 @@ function Header (props) {
         </div>
 
         <div className='header_options'>
-          <span onClick={()=>window.open("https://github.com/rohan-motukuri/g-drive-clone#readme", "_blank")}>
+          <span onClick={()=>window.open("https://github.com/rohan-motukuri/g-drive-clone/tree/main#demo", "_blank")}>
             <HelpOutlineIcon/>
           </span>
           <span className='header_options_avatar' onClick={()=>props.setUserCard(true)}>
