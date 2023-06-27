@@ -243,8 +243,9 @@
     border-width: 0px;
     border-radius: 30px;
 }
-    .window_box_icon .MuiSvgIcon-root {
-        height: 19px;
+    .window_box_icon .MuiSvgIcon-root,
+    .window_box_icon img  {
+        height: 21px;
         margin: auto;
     }
     .window_box_icon input {

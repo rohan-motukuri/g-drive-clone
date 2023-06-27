@@ -22,22 +22,12 @@ function SideBar(props) {
         props.space[1](e);
     }
 
-    function formatBytes (num) {
-        if(!num) return 0 + ' MB';
-        const postfix = ['Bytes', 'KB', 'MB', 'GB'];
-        const base = 1024;
-        
-        const i = Math.floor(Math.log(num) / Math.log(base));
-
-        return parseFloat((num / Math.pow(base, i)).toFixed(0)) + " " + postfix[i];
-
-    }
-
   return (
     <div className='sidebar'>
         <Modals modalId="uploading" uploaderLedge = {props.uploaderLedge} 
                 uploaderState = {props.uploaderState} dummy = {props.dummy}
-                user={props.user} setUser={props.setUser}/>
+                user={props.user} setUser={props.setUser} cQ = {props.cQ} isSideBar = {true}
+                thereMem = {props.thereMem} usedMem = {props.usedMem}/>
         <div className = 'sidebar_button' >
             
             <button id="newbtn" 
@@ -54,7 +44,7 @@ function SideBar(props) {
                         uploaderState = {props.uploaderState}
                         dummy = {props.dummy}
                         metaUpload = {props.metaUpload}
-                        user={props.user} setUser={props.setUser}
+                        user={props.user} setUser={props.setUser} thereMem = {props.thereMem} usedMem = {props.usedMem}
                 /> : ""
             
             }

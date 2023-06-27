@@ -9,12 +9,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FolderIcon from '@mui/icons-material/Folder';
 import StarIcon from '@mui/icons-material/Star';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import CollectionsTwoToneIcon from '@mui/icons-material/CollectionsTwoTone';
+import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfTwoTone';
 
 import Modals from './Modals';
 
 import { db } from './firebase';
 import { Modal } from '@mui/material';
-
 
 
 function Window(props) {
@@ -40,6 +41,8 @@ function Window(props) {
 
     const [fileView, setFileView] = useState(null);
 
+    const [pdfIcon, pngIcon, jpgIcon, txtIcon, docIcon] = [<img src={require("./icons/pdf_alt.png")}/>, <img src={require("./icons/img_alt.png")}/>, <img src={require("./icons/img_alt.png")}/>, <img src={require("./icons/txt_alt.png")}/>, <img src={require("./icons/doc_alt.png")}/>]
+
     const handleIndividualFileSelectForOptions = (e) => {
         if(props.select[0].findIndex(t => t.id == e.id) == -1) props.select[1]([...props.select[0], e]) // Added to fix the bug of repeated adding to selects on multiclicking the individual options
         document.getElementById("SelectsEligible" + e.id).setAttribute('checked', true);
@@ -61,55 +64,63 @@ function Window(props) {
         if(props.select[0].length == 0) props.fopts[1](false);
     }
 
-    const sortByLex=(a, b) => {
+    const sortByLex = (a, b) => {
         if (a.data.filename < b.data.filename) {
-          return -1;
+            return -1;
         }
         if (a.data.filename > b.data.filename) {
-          return 1;
+            return 1;
         }
         return 0;
-      }
-
-    function formatBytes (num) {
-        if(!num) return 0 + ' MB';
-        const postfix = ['Bytes', 'KB', 'MB', 'GB'];
-        const base = 1024;
-        
-        const i = Math.floor(Math.log(num) / Math.log(base));
-
-        return parseFloat((num / Math.pow(base, i)).toFixed(0)) + " " + postfix[i];
-
     }
 
-    function file_card_preview(t) {
+    const sortBySize = (a, b) => {
+        if (a.data.size < b.data.size) {
+            return 1;
+        }
+        if (a.data.size > b.data.size) {
+            return -1;
+        }
+        return 0;
+    }
+
+
+
+    function file_card_preview(t, icon) {
         const img=(url)=>(<img src={url}/>);
 
-        switch(t.data.type.split("/")?.at(1)) {
-            case 'img' : {
-                return img(t.data.fileURL);
+        switch(t.type.split("/")?.at(1)) {
+            case 'png' : {
+                return icon ? pngIcon : img(t.fileURL);
+            }
+            case 'jpg' : case 'jpeg' : {
+                return icon ? jpgIcon : img(t.fileURL);
             } 
+
+            case 'plain' : {
+                return icon ? txtIcon : img("https://i.stack.imgur.com/zl3or.png");
+            }
             case 'pdf' : {
-                return img("https://st3.depositphotos.com/11870586/14682/v/450/depositphotos_146824281-stock-illustration-pdf-file-icon-pdf-format.jpg");
+                return icon ? pdfIcon : img("https://st3.depositphotos.com/11870586/14682/v/450/depositphotos_146824281-stock-illustration-pdf-file-icon-pdf-format.jpg");
             } 
             case 'vnd.openxmlformats-officedocument.wordprocessingml.document' : {
-                return img("https://th.bing.com/th/id/OIP.n7-TJXBm-P2-7xMtEvbAkgHaHa?pid=ImgDet&w=768&h=768&rs=1");
+                return icon ? docIcon : img("https://th.bing.com/th/id/OIP.n7-TJXBm-P2-7xMtEvbAkgHaHa?pid=ImgDet&w=768&h=768&rs=1");
             }
-            default : return img("https://i.stack.imgur.com/zl3or.png")
+            default : return icon ? <InsertDriveFileIcon/> : img("https://i.stack.imgur.com/zl3or.png")
         }
     }
 
     useEffect(() => {
       db.collection('files_db').onSnapshot(snap => {
-        setFiles(snap.docs.map(file => ({
+        setFiles(snap.docs.map(file => !file.data().deleted ? ({
             id:file.id,
             data:file.data()
-        })));
+        }) : null).filter(t => t));
         let x = 0;
         snap.docs.forEach(file => {
             let z = file.data();
             if(z.user == props.user.email && !z.deleted)
-            props.setUsedMem({str:formatBytes(x += z.size), byt:x});
+            props.setUsedMem({str:props.formatBytes(x += z.size), byt:x});
         });
       })
     }, [])
@@ -132,7 +143,7 @@ function Window(props) {
                                 onMouseEnter={()=>setSelectView([t.id + Name, true, props.select[0].findIndex(selected => selected.id == t.id) != -1])}
                                 onMouseLeave={()=>setSelectView([t.id + Name, false])}>
                                     <span className='window_box_icon' onClick={()=>{if(Name != "Suggested")handleSelects();setSelectView([t.id + Name, true, !selectView[2]]);}}>
-                                        {Name != "Suggested" && selectView[1] && selectView[0] == t.id + Name ?<input id={"SelectsEligible"+t.id} type="checkbox" checked={selectView[2]} readOnly/>:<InsertDriveFileIcon/>}
+                                        {Name != "Suggested" && selectView[1] && selectView[0] == t.id + Name ?<input id={"SelectsEligible"+t.id} type="checkbox" checked={selectView[2]} readOnly/>:file_card_preview(t.data, true)}
                                     </span>
                                     <span className='window_box_name' style={{overflow : 'clip',...((Name == "Suggested") ? {width : 180+"px", marginRight:"10px"} : {})}}>
                                     {t.data.filename}
@@ -148,10 +159,11 @@ function Window(props) {
                                 className={'window_box_card_file window_box_card' + ((props.select[0].findIndex(selected => selected.id == t.id) != -1) ? " window_boxes_activated" : "")}
                                 onMouseEnter={()=>setSelectView([t.id + Name, true, props.select[0].findIndex(selected => selected.id == t.id) != -1])}
                                 onMouseLeave={()=>setSelectView([t.id + Name, false])}
+                                onDoubleClick={()=>setFileView(t.data)}
                                 >
-                                <div className='window_box_card_texts' onDoubleClick={()=>setFileView(t)}>
+                                <div className='window_box_card_texts' >
                                     <span className='window_box_icon' onClick={()=>{if(Name != "Suggested")handleSelects(t);setSelectView([t.id + Name, true, !selectView[2]]);}}>
-                                        {Name != "Suggested" && selectView[1] && selectView[0] == t.id + Name ?<input id={"SelectsEligible"+t.id} type="checkbox" checked={selectView[2]} readOnly/>:<InsertDriveFileIcon/>}
+                                        {Name != "Suggested" && selectView[1] && selectView[0] == t.id + Name ?<input id={"SelectsEligible"+t.id} type="checkbox" checked={selectView[2]} readOnly/>:file_card_preview(t.data, true)}
                                     </span>
                                     <span className={'window_box_name'} 
                                     style={{overflow : 'clip',...((Name == "Suggested") ? {width : 180+"px", marginRight:"10px"} : {})}}>
@@ -166,7 +178,7 @@ function Window(props) {
                                 </div>
                                 <span className='window_box_preview'>
                                     {
-                                        file_card_preview(t)
+                                        file_card_preview(t.data)
                                     }
                                 </span>
                             </div> 
@@ -184,9 +196,9 @@ function Window(props) {
                                 className={'window_box_list' + ((props.select[0].findIndex(selected => selected.id == t.id) != -1) ? " window_boxes_activated" : "")}
                                 onMouseEnter={()=>setSelectView([t.id + Name, true, props.select[0].findIndex(selected => selected.id == t.id) != -1])}
                                 onMouseLeave={()=>setSelectView([t.id + Name, false])}>
-                                <div className='window_box_list_texts' onDoubleClick={()=>setFileView(t)}>
+                                <div className='window_box_list_texts' onDoubleClick={()=>setFileView(t.data)}>
                                     <span className='window_box_icon' onClick={()=>{handleSelects(t);setSelectView([t.id + Name, true, !selectView[2]]);}}>
-                                        {selectView[1] && selectView[0] == t.id + Name  ? <input id={"SelectsEligible" + t.id} type="checkbox" checked={selectView[2]} readOnly/> : ((t.data.folder)? <FolderIcon/> : <InsertDriveFileIcon/>)}
+                                        {selectView[1] && selectView[0] == t.id + Name  ? <input id={"SelectsEligible" + t.id} type="checkbox" checked={selectView[2]} readOnly/> : ((t.data.folder)? <FolderIcon/> : file_card_preview(t.data, true))}
                                     </span>
                                     <span className='window_box_name' style={{overflowX : 'clip', overflowY : 'hidden', display:'block', height:'20px'}}>
                                         {t.data.filename}
@@ -201,7 +213,7 @@ function Window(props) {
                                         {t.data.starred && t.data.user == props.user.email && space != "trash"? <StarIcon/> : ""}
                                     </span>
                                     <span className='window_box_size' style={{overflowX : 'clip', overflowY : 'hidden', display:'block', height:'20px'}}>
-                                        {formatBytes(t.data.size)}
+                                        {props.formatBytes(t.data.size)}
                                     </span>
                                     <span className='window_box_options' onClick={()=>handleIndividualFileSelectForOptions(t)}>
                                         <MoreVertIcon/>
@@ -223,7 +235,7 @@ function Window(props) {
         switch(space) {
             case "my-drive" : {
                 return [
-                    sectionDisplay("Suggested", files.filter(t => !t.data.folder && isEqualOrShared(t) && !t.data.trashed && !t.data.deleted)
+                    sectionDisplay("Suggested", files.filter((t, i) => !t.data.folder && isEqualOrShared(t) && !t.data.trashed && !t.data.deleted && i < 20)
                     .sort((a, b) => b.data.timestamp - a.data.timestamp), true),
                     
                     ((files.findIndex(t => t.data.folder && !t.data.trashed) != -1) ? 
@@ -281,7 +293,7 @@ function Window(props) {
                 return [
                     sectionDisplay("Storage", files
                         .filter(t => t.data.user == props.user.email && !t.data.trashed && !t.data.deleted)
-                        .sort(sortByLex), false)
+                        .sort(sortBySize), false)
                 ];
             } break;
         }
@@ -290,12 +302,12 @@ function Window(props) {
     return (
     <div style={{width:100+"%"}}>
       {
-        props.fopts[0] ? <Modals modalId = "fOptions" selects = {props.select[0]} setSelects = {props.select[1]} setfoptions = {props.fopts[1]} setSharePop = {setSharePop} proceedShare = {proceedShare} setRenamePop={setRenamePop} setCopyPop = {setCopyPop} copyPop = {copyPop} space = {space} trashPop = {trashPop} setTrashPop = {setTrashPop}
-deletePop = {deletePop} setDeletePop = {setDeletePop}/> : ""
+        props.fopts[0] ? <Modals modalId = "fOptions" selects = {props.select[0]} user={props.user} setSelects = {props.select[1]} setfoptions = {props.fopts[1]} setSharePop = {setSharePop} proceedShare = {proceedShare} setRenamePop={setRenamePop} setCopyPop = {setCopyPop} copyPop = {copyPop} space = {space} trashPop = {trashPop} setTrashPop = {setTrashPop}
+deletePop = {deletePop} setDeletePop = {setDeletePop} copyQueue = {props.cQ[0]} setCopyQueue = {props.cQ[1]}/>: ""
       } {
         sharePop ? <Modals modalId = "sharePop" selects = {props.select[0]} setSelects = {props.select[1]} setSharePop = {setSharePop} setProceedShare = {setProceedShare}/> : ""
       } {
-        renamePop ? <Modals modalId = "renamePop" selects = {props.select[0]} setSelects = {props.select[1]} setRenamePop = {setRenamePop} setfoptions = {props.fopts[1]}/> : ""
+        renamePop ? <Modals modalId = "renamePop" selects = {props.select[0]} setSelects = {props.select[1]} setRenamePop = {setRenamePop} setfoptions = {props.fopts[1]}/>: ""
       } {
         copyPop ? <Modals modalId = "copyPop" selects = {props.select[0]} setSelects = {props.select[1]} setCopyPop = {setCopyPop} setfoptions = {props.fopts[1]}/> : ""
       } {
@@ -304,6 +316,8 @@ deletePop = {deletePop} setDeletePop = {setDeletePop}/> : ""
         props.userCard ? <Modals modalId = "userChanges" setSelects = {props.select[1]} setUserCard = {props.setUserCard} user={props.user} setfoptions = {props.fopts[1]} setUser = {props.setUser}/> : ""
       } {
         fileView ? <Modals modalId = "fileViewer" fileView = {fileView} setFileView = {setFileView}/> : ""
+      } {
+        props.searchSee[0] ? <Modals modalId = "search_preview" thereMem = {props.thereMem} user={props.user} selects = {props.select[0]} searchPop = {props.searchSee[0]} setSearchPop = {props.searchSee[1]} fileIcons = {file_card_preview} fileView = {fileView} setFileView = {setFileView} searchAnswers = {props.searchAns[0]} setSearchAnswers = {props.searchAns[1]}/> : ""
       }
       <div className='window_header'>
           <div className='window_header_heading'>

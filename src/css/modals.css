@@ -449,7 +449,7 @@
     position: fixed;
     top:140px;
     right:100px;
-    height: 215px;
+    height: 255px;
     width: 270px;
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
@@ -484,6 +484,21 @@
     height: 35px;
     width: 100%;
 
+}
+
+.f_select_copy {
+    grid-template-columns: 30% 40% auto;
+}
+
+.f_select_copy_close {
+    display: flex;
+    align-items: center;
+}
+
+.f_select_copy_close .MuiSvgIcon-root {
+    margin-top: 5px;
+    height: 20px;
+    margin-left: 30px;
 }
 
     .f_select_image .MuiSvgIcon-root {
@@ -684,7 +699,7 @@
 
 /* User Change */
 
-.userSwitchOverlay {
+.userSwitchOverlay, .search_overlay {
     position: fixed;
     z-index: 2;
     background-color: rgba(255, 255, 255, 0);
@@ -803,7 +818,7 @@
  
 .file_viewer_overlay {
     position: fixed;
-    z-index: 2;
+    z-index: 4;
     background-color: rgba(90, 92, 92, 0.443);
     width: 100%;
     height: 100%;
@@ -823,7 +838,7 @@
     box-shadow: 0px 1.78px 8px #474646a7;
     border: none;
 
-    z-index: 3;
+    z-index: 5;
 
     display: flex;
     flex-direction: column;
@@ -838,3 +853,67 @@
     display: flex;
     align-items: center;
 }
+
+/* Search */
+
+.search_pop {
+    position: fixed;
+    top:65px;
+    left:260px;
+    height: 255px;
+    width: 725px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 0px 0px 30px 30px;
+    box-shadow: 0px 6px 8px #cccccc38;
+
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: space-between;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+}
+
+.search_items_item {
+    display: grid;
+    grid-template-columns: 60px auto;
+    align-items: center;
+    margin: 0px 10px;
+
+    height: 40px;
+    width: 95%;
+    background-color: #fff;
+    border-bottom: 1px solid #bcbdbc4e;
+}
+    .search_items_icon {
+        display: flex;
+        align-items: center;
+        width:30px;
+        height:30px;
+        margin-left: 10px;
+        border-width: 0px;
+        border-radius: 30px;
+    }
+    .search_items_icon img,
+    .search_items_icon .MuiSvgIcon-root {
+        height: 20px;
+        margin: auto;
+    }
+    
+    .search_items_item:hover {
+        background-color: #f0f1f0;
+        cursor: pointer;
+    }
+
+    .search_items_item_deactivated {
+        border-bottom: 0px;
+    }
+    
+    .search_items_item_deactivated:hover {
+        cursor:default;
+        background-color: #fff;
+    }

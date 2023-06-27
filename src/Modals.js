@@ -25,10 +25,10 @@ import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreIcon from '@mui/icons-material/Restore';
-import { ConstructionOutlined, SoapRounded } from '@mui/icons-material';
+import { Close, ConstructionOutlined, SoapRounded } from '@mui/icons-material';
 
 import LogoutIcon from '@mui/icons-material/Logout';
 
@@ -71,7 +71,6 @@ function Modals (props) {
 
     const shareProcess = () => {
         props.setSharePop(true);
-        
         props.setfoptions(false);
     };
 
@@ -79,6 +78,7 @@ function Modals (props) {
 
     const starProcess = () => {
         props.selects.forEach(t => {
+            if(t.data.user == props.user.email)
             db.collection("files_db").doc(t.id) // Add a condition to check if current user is owner
             .update({starred : !t.data.starred});
         });
@@ -113,11 +113,12 @@ function Modals (props) {
     const moveToProcess = () => {};
     
     const copyProcess = () => {
-        
+        if(!props.copyQueue.length)
+            props.setCopyQueue(props.selects);
     };
     const downloadProcess = () => {
         // window.location.href = props.selects[0].data.fileURL + "?Content-Disposition: attachment; filename=test.pdf";
-        window.open(props.selects[0].data.fileURL + "?download", "_blank");
+        props.selects.forEach(x => window.open(x.data.fileURL + "?download", "_blank")); 
     };
     const removeProcess = () => {
         props.setTrashPop(true);
@@ -166,11 +167,20 @@ function Modals (props) {
 
     const handleUploadedToFrame=(e)=> {
         if(e.target.files.length != 0) {
+            let collected_set = props.usedMem.byt;
             let temp = [...e.target.files].map(t => {
+                
+                collected_set += t.size;
+                if(collected_set <= props.thereMem.byt)
                 return {
                     uploadStatus:'inprogress',
                     file:t
                 }
+                collected_set -= t.size;
+                return {
+                    uploadStatus:'cancelled',
+                    file:t
+                };
                 // if(t.uploadStatus == "inprogress") {
                 //     storage.ref(`files/${t.file.name}`)
                 //     .put(t.file)
@@ -191,8 +201,9 @@ function Modals (props) {
                 //     });
                 // }
             }) 
+            temp = temp.filter(t => t);
             temp = [...props.uploaderLedge[0], ...temp];
-            if(props.uploaderState[1][0]) temp = temp.filter(t => t.uploadStatus != 'completed')
+            if(props.uploaderState[1][0]) temp = temp.filter(t => t.uploadStatus == 'inprogress')
             props.uploaderLedge[1](temp);
             props.uploaderState[1][1](false);
             props.uploadDisable[1](true);
@@ -203,7 +214,7 @@ function Modals (props) {
             }
            
             temp.forEach((t, i) => {
-                if(t.uploadStatus != 'completed')
+                if(t.uploadStatus == 'inprogress')
                         db.collection("files_db").where("def", "==", true).get().then(p => {
                             let x = t.file.name + props.user.email + new Date().toUTCString();
                             storage.ref(`files/${x}`)
@@ -214,6 +225,7 @@ function Modals (props) {
                                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                                         lastaccessed: null,
                                         filename: t.file.name,
+                                        fileinstorage : x,
                                         fileURL: (temp.link = url),
                                         size: snapshot._delegate.bytesTransferred,
                                         user: props.user.email,
@@ -251,6 +263,10 @@ function Modals (props) {
         }
     }
 
+    const handleCopyToFrame = () => {
+        
+    }
+
     const handleUploadStatus_header_close = ()=> {
         props.uploaderState[1][1](true);
     }
@@ -265,10 +281,53 @@ function Modals (props) {
     }
 
     function fileViewerRenderMatcher () {
-        switch(props.fileView.data.type.split('/')[1]) {
-            case 'png': case'jpeg': case'jpg': return (<img src={props.fileView.data.fileURL} style={{margin:"auto", alignContent:"center", maxWidth:"90%", maxHeight:"90%"}}/>);
-            default : return (<embed width="90%" height="90%" style={{margin:"auto", alignContent:"center"}} src={props.fileView.data.fileURL + "?#zoom=50&scrollbar=1&toolbar=1"} type={props.fileView.data.type}/>)
+        switch(props.fileView.type.split('/')[1]) {
+            case 'png': case'jpeg': case'jpg': return (<img src={props.fileView.fileURL} style={{margin:"auto", alignContent:"center", maxWidth:"90%", maxHeight:"90%"}}/>);
+            default : return (<embed width="90%" height="90%" style={{margin:"auto", alignContent:"center"}} src={props.fileView.fileURL + "?#zoom=50&scrollbar=1&toolbar=1"} type={props.fileView.type}/>)
         }
+    }
+
+    if(props.isSideBar && props.cQ[0].length) {
+        props.cQ[0].forEach(x=>{
+        storage.ref("files/7").put(storage.ref("files").child(x.data.fileinstorage));
+        props.cQ[1]([]);//     .getDownloadURL().then(url => {
+        //         db.collection("files_db").add({
+        //             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        //             lastaccessed: null,
+        //             filename: t.file.name,
+        //             fileinstorage : x,
+        //             fileURL: (temp.link = url),
+        //             size: snapshot._delegate.bytesTransferred,
+        //             user: props.user.email,
+        //             dir: (temp.dir = []),
+        //             shared: [],
+        //             shared_on:null,
+        //             def: true,
+        //             type: t.file.type,
+        //             folder: false,
+        //             starred: false,
+        //             trashed: false,
+        //             trashed_on:null
+        //         })
+                
+        //     })
+        })
+
+    }
+
+    const searchAction = (text) => {
+        let x = [];
+        db.collection('files_db').get().then(snap => {
+            
+            snap.forEach(doc => {
+                let docdata = doc.data();
+                if((docdata.user == props.user.email || docdata.shared.includes(props.user.email)) && !docdata.trashed && docdata.filename.toLowerCase().includes(text.trim().toLowerCase())) {
+                    x.push(docdata);
+                }
+            })
+            props.setSearchAnswers(x);
+            
+        })
     }
 
     let returnee = "";
@@ -339,7 +398,7 @@ function Modals (props) {
             <div className={`uploadStatus ${(props.uploaderState[0][0] ? 'uploadStatus_min' : '' )}`} >
                 <div className={`uploadStatus_header`}>
                     <div className='uploadStatus_header_display'>
-                        <span>Uploading {props.uploaderLedge[0].filter(t=>t.uploadStatus!='completed').length} files</span>
+                        <span>Uploading {props.uploaderLedge[0].filter(t=>t.uploadStatus=='inprogress' || t.uploadStatus == 'copying').length} files</span>
                     </div>
                     <div className='uploadStatus_header_buttons'>
                         <div className='uploadStatus_header_pop' onClick={()=>props.uploaderState[0][1](!props.uploaderState[0][0])}>
@@ -366,9 +425,9 @@ function Modals (props) {
                                         <span>{t.file.name}</span>
                                     </div>
                                     <div className='uploadStatus_element_progress' onClick={()=>document.getElementById("inner_uploadStatus_element_progress").focus()}>
-                                        {(isShown[1] == i && isShown[0] && t.uploadStatus == "completed")? (<FolderOpenIcon id="inner_uploadStatus_element_progress" onClick={()=>{}}/>) 
+                                        {(isShown[1] == i && isShown[0] && t.uploadStatus == "completed" && t.uploadStatus == "cancelled")? (<FolderOpenIcon id="inner_uploadStatus_element_progress" onClick={()=>{}}/>) 
                                         : (t.uploadStatus == 'completed' ? <CheckCircleIcon id="inner_uploadStatus_element_progress"/> 
-                                                                        : <LoopOutlinedIcon id="inner_uploadStatus_element_progress"/>)}
+                                                                        : (t.uploadStatus == 'cancelled' ? <Close/> : <LoopOutlinedIcon id="inner_uploadStatus_element_progress"/> ))}
                                     </div>
                                 </div>
                             );
@@ -430,16 +489,18 @@ function Modals (props) {
                     <span className='f_select_option'>
                         Make a Copy
                     </span>
+                    {props.copyQueue.legnth == 0 ? <span className='f_select_copy_close'>
+                        <CloseIcon/>
+                    </span> : ""}
                 </div>
-                {(props.selects.length == 1) ? <div className='f_select_download' onClick={downloadProcess}>
+                <div className='f_select_download' onClick={downloadProcess}>
                     <span className='f_select_image'>
-                        <FileDownloadOutlinedIcon/>
+                        <OpenInNewIcon/>
                     </span>
                     <span className='f_select_option'>
-                        Download
+                        Open
                     </span>
-                </div> : ""
-                }
+                </div>
                 <hr className='seperator_on_options'/> 
                 </>
             }
@@ -541,6 +602,7 @@ function Modals (props) {
                            onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
                            onBlur={()=>setIpShown(false)}
                            onKeyDown={(e)=>enterHandle(e, "share")}
+                           autofocus
                            /*onChange={handleShareIpChange}*//>
                 </div>
                 <div className='share_buttons'>
@@ -570,7 +632,8 @@ function Modals (props) {
                            type="text" 
                            onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
                            onBlur={()=>setIpShown(false)}
-                           onKeyDown={(e)=>enterHandle(e, "rename")}/>
+                           onKeyDown={(e)=>enterHandle(e, "rename")}
+                           autofocus/> 
                 </div>
                 <div className='share_buttons'>
                     <div className='share_btn_cancel' onClick={()=>props.setRenamePop(false)}>
@@ -590,28 +653,30 @@ function Modals (props) {
                 </div>
             </>
         ); break;
-        case "search_preview" : returnee = (
+        case "search_preview" : 
+        searchAction(props.searchPop);
+        returnee = (
         <>
-            <div className='search_overlay'/>
-            <div className='search_pop'>
-                <div className='search_items_window'>
-                    {
-                        [].map(t => {
-                            return (
-                                <>
-                                    <div className='search_items_item'>
-                                        <div className='search_items_icon'>
-
-                                        </div>
-                                        <div className='search_items_name'>
-                                            {t.data.filename}
-                                        </div>
+            <div className='search_overlay' onClick={() => props.setSearchPop(false)}/>
+            <div className='search_pop' /*style={{height:(44 + (props.searchAnswers <= 5 ? props.searchAnswers.length * 40 : 200)) + "px"}}*/>
+                <div className='f_make_whitespace'/>
+                {
+                    (props.searchAnswers.length > 5 ? props.searchAnswers.filter((t, i) => i < 5) : [...props.searchAnswers, ...Array.apply(null, new Array(5 - props.searchAnswers.length))]).map(t => {
+                        return (
+                            <>
+                                <div className={'search_items_item' + (!t ? ' search_items_item_deactivated' : '')} onClick={()=>t?props.setFileView(t):null}>
+                                    <div className='search_items_icon'>
+                                        {t ? props.fileIcons(t, true) : ""}
                                     </div>
-                                </>
-                            )
-                        })
-                    }
-                </div>
+                                    <div className='search_items_name'>
+                                        {t ? t.filename : ""}
+                                    </div>
+                                </div>
+                            </>
+                        )
+                    })
+                }
+                <div className='f_make_whitespace'/>
             </div>
         </>); break;
         case "search_options" : returnee = (

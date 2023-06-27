@@ -28,7 +28,12 @@ function App() {
   const [usedMem, setUsedMem] = useState({str:"GB", byt:0});
   const [thereMem, setThereMem] = useState({str:"100MB", byt:100000000});
 
+  const [copyQueue, setCopyQueue] = useState([]);
+
   const [userCard, setUserCard] = useState(false);
+
+  const [searchPop, setSearchPop] = useState(false);
+  const [searchAnswers, setSearchAnswers] = useState([]);
 
   const signIn= ()=> {
     auth.signInWithPopup(provider).then(({user}) => {
@@ -36,10 +41,21 @@ function App() {
     }).catch(er => alert(er.message))
   }
 
+  function formatBytes (num) {
+    if(!num) return 0 + ' MB';
+    const postfix = ['Bytes', 'KB', 'MB', 'GB'];
+    const base = 1024;
+    
+    const i = Math.floor(Math.log(num) / Math.log(base));
+
+    return parseFloat((num / Math.pow(base, i)).toFixed(0)) + " " + postfix[i];
+
+}
+
   return user ? (
     <>
     <Modals modalId = "search_overlay" user={user}/>
-    <Header user={user} setUser={setUser} space={[space, setSpace]} setUserCard = {setUserCard}/>
+    <Header user={user} setUser={setUser} space={[space, setSpace]} setUserCard = {setUserCard} searchSee = {[searchPop, setSearchPop]}/>
     <div className="App">
       <Sidebar uploaderLedge = {[uploading, setUploading]} 
                uploaderState = {[[umMin, setUMmin], [umClose,setUMclose]]}
@@ -50,6 +66,7 @@ function App() {
                space={[space, setSpace]}
                select = {[selects, setSelects]}
                fopts = {[fOptions, setfoptions]}
+               cQ = {[copyQueue, setCopyQueue]}
                usedMem = {usedMem}
                thereMem = {thereMem}/>
       <Window
@@ -57,10 +74,14 @@ function App() {
       space={[space, setSpace]}
       select = {[selects, setSelects]}
       fopts = {[fOptions, setfoptions]}
+      cQ = {[copyQueue, setCopyQueue]}
       setUsedMem = {setUsedMem}
       setThereMem = {setThereMem}
       userCard = {userCard}
-      setUserCard = {setUserCard}/>
+      setUserCard = {setUserCard}
+      searchSee = {[searchPop, setSearchPop]}
+      searchAns = {[searchAnswers, setSearchAnswers]}
+      formatBytes = {formatBytes}/>
     </div>
     </> 
   ) : (
