@@ -2,8 +2,7 @@ import Header from "./Header";
 import Sidebar from "./SideBar";
 import Window from "./Window";
 
-import { storage, db, auth, provider } from './firebase';
-import firebase from "firebase"
+import { auth, provider } from './firebase';
 
 import Modals from "./Modals";
 import React, { useState } from "react"
@@ -28,7 +27,6 @@ function App() {
   const [usedMem, setUsedMem] = useState({str:"GB", byt:0});
   const [thereMem, setThereMem] = useState({str:"100MB", byt:100000000});
 
-  const [copyQueue, setCopyQueue] = useState([]);
 
   const [userCard, setUserCard] = useState(false);
 
@@ -66,7 +64,6 @@ function App() {
                space={[space, setSpace]}
                select = {[selects, setSelects]}
                fopts = {[fOptions, setfoptions]}
-               cQ = {[copyQueue, setCopyQueue]}
                usedMem = {usedMem}
                thereMem = {thereMem}/>
       <Window
@@ -74,7 +71,6 @@ function App() {
       space={[space, setSpace]}
       select = {[selects, setSelects]}
       fopts = {[fOptions, setfoptions]}
-      cQ = {[copyQueue, setCopyQueue]}
       setUsedMem = {setUsedMem}
       setThereMem = {setThereMem}
       userCard = {userCard}

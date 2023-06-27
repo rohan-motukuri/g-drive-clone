@@ -5,8 +5,7 @@ import firebase from "firebase"
 
 import "./css/modals.css"
 
-import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
-import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
+
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
@@ -15,20 +14,16 @@ import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
 import LoopOutlinedIcon from '@mui/icons-material/LoopOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
-import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
-import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
-import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreIcon from '@mui/icons-material/Restore';
-import { Close, ConstructionOutlined, SoapRounded } from '@mui/icons-material';
+import { Close } from '@mui/icons-material';
 
 import LogoutIcon from '@mui/icons-material/Logout';
 
@@ -39,19 +34,10 @@ function Modals (props) {
     const [newFolderModal, setNewFolderModal] = useState(false);
     const [newFolderPop, setNewFolderPop] = useState(true);
 
-    const [sharetoemailInput, setSharetoemailInput] = useState("");
-    const [renameInput, setRenameInput] = useState("");
-
-    const [dummy, setDummy] = useState(false);
-
     // Sharing Handling
 
     const stopSelectProcess = ()=>{
         props.setSelects([]);
-    };
-
-    const handleShareIpChange = (e) => {
-        setSharetoemailInput(e.target.value);
     };
 
     const handleShareClick = () => {
@@ -79,7 +65,7 @@ function Modals (props) {
     const starProcess = () => {
         props.selects.forEach(t => {
             if(t.data.user == props.user.email)
-            db.collection("files_db").doc(t.id) // Add a condition to check if current user is owner
+            db.collection("files_db").doc(t.id) 
             .update({starred : !t.data.starred});
         });
 
@@ -99,27 +85,20 @@ function Modals (props) {
         let x = document.getElementById("inputFieldShareF").value;
         let y = props.selects;
         y.forEach(t => {
+            if(t.data.user == props.user.email)
             db.collection("files_db").doc(t.id)
             .update({filename : x});
         });
 
-        // stopSelectProcess();
         stopSelectProcess();
         props.setRenamePop(false);
         props.setfoptions(false);
     };
-
-    const getLinkProcess = ()=> {};
-    const moveToProcess = () => {};
     
-    const copyProcess = () => {
-        if(!props.copyQueue.length)
-            props.setCopyQueue(props.selects);
-    };
     const downloadProcess = () => {
-        // window.location.href = props.selects[0].data.fileURL + "?Content-Disposition: attachment; filename=test.pdf";
         props.selects.forEach(x => window.open(x.data.fileURL + "?download", "_blank")); 
     };
+
     const removeProcess = () => {
         props.setTrashPop(true);
         if(props.space == "trash") props.setDeletePop(true);
@@ -136,6 +115,9 @@ function Modals (props) {
             y.forEach(t => {
                 if(t.data.user == props.userName) db.collection("files_db").doc(t.id)
                 .update({trashed : true});
+                else
+                db.collection("files_db").doc(t.id) 
+                .update({shared : t.data.shared.filter(s => s != props.userName)});
             });
 
         props.setTrashPop(false);
@@ -155,7 +137,7 @@ function Modals (props) {
     }
 
     const uploadFile = useRef(null);
-    const onUploadFile=()=> { // https://www.youtube.com/watch?v=0AS9Gfd1j5s
+    const onUploadFile=()=> {
         uploadFile.current.click();
         setNewFolderModal(false); 
     };
@@ -181,26 +163,7 @@ function Modals (props) {
                     uploadStatus:'cancelled',
                     file:t
                 };
-                // if(t.uploadStatus == "inprogress") {
-                //     storage.ref(`files/${t.file.name}`)
-                //     .put(t.file)
-                //     .then(snapshot=>{
-                //         storage.ref("files").child(t.file.name).getDownloadURL().then(url => {
-                //             db.collection("files_db").add({
-                //                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                //                 filename: t.file.name,
-                //                 fileURL: url,
-                //                 size: snapshot._delegate.bytesTransferred,
-                //                 user: 'me',
-                //                 shared: []
-                //             })
-                            
-                //         })
-                //         t.uploadStatus = "completed";
-                //         setDummy(!dummy);
-                //     });
-                // }
-            }) 
+            })
             temp = temp.filter(t => t);
             temp = [...props.uploaderLedge[0], ...temp];
             if(props.uploaderState[1][0]) temp = temp.filter(t => t.uploadStatus == 'inprogress')
@@ -253,18 +216,7 @@ function Modals (props) {
             })
 
             exitModals();
-            // props.uploaderLedge[1]([[...props.uploaderLedge[0][0], ...[...e.target.files]].map(t=>{
-            //     if(!t.uploadStatus) return {
-            //         uploadStatus:'inprogress',
-            //         file:t
-            //     }
-            //     return t;
-            // }), {...props.uploaderLedge[0][1], close:!true}]);
         }
-    }
-
-    const handleCopyToFrame = () => {
-        
     }
 
     const handleUploadStatus_header_close = ()=> {
@@ -286,35 +238,7 @@ function Modals (props) {
             default : return (<embed width="90%" height="90%" style={{margin:"auto", alignContent:"center"}} src={props.fileView.fileURL + "?#zoom=50&scrollbar=1&toolbar=1"} type={props.fileView.type}/>)
         }
     }
-
-    if(props.isSideBar && props.cQ[0].length) {
-        props.cQ[0].forEach(x=>{
-        storage.ref("files/7").put(storage.ref("files").child(x.data.fileinstorage));
-        props.cQ[1]([]);//     .getDownloadURL().then(url => {
-        //         db.collection("files_db").add({
-        //             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        //             lastaccessed: null,
-        //             filename: t.file.name,
-        //             fileinstorage : x,
-        //             fileURL: (temp.link = url),
-        //             size: snapshot._delegate.bytesTransferred,
-        //             user: props.user.email,
-        //             dir: (temp.dir = []),
-        //             shared: [],
-        //             shared_on:null,
-        //             def: true,
-        //             type: t.file.type,
-        //             folder: false,
-        //             starred: false,
-        //             trashed: false,
-        //             trashed_on:null
-        //         })
-                
-        //     })
-        })
-
-    }
-
+    
     const searchAction = (text) => {
         let x = [];
         db.collection('files_db').get().then(snap => {
@@ -353,7 +277,7 @@ function Modals (props) {
                 </div>
                 <div className='cfp_buttons'>
                     <div className='cfp_button_enter' 
-                    onClick={()=>{/*First, Upload and call uploading Modal and then...*/setNewFolderModal(false); exitModals()}}>
+                    onClick={()=>{setNewFolderModal(false); exitModals()}}>
                         <span>Enter</span>
                     </div>
                     <div className='cfp_button_cancel' 
@@ -367,16 +291,6 @@ function Modals (props) {
         <>
         <div className='f_make_pop'>
             <div className='f_make_whitespace'/>
-            {/*<div className='f_make_folder_create' 
-                 onClick={()=>{setNewFolderPop(false); setNewFolderModal(true);}}>
-                <span className='f_make_image'>
-                    <CreateNewFolderOutlinedIcon/>
-                </span>
-                <span className='f_make_option'>
-                    Create Folder
-                </span>
-            </div>
-            <hr/> */}
             <input type="file" ref={uploadFile} style={{display: 'none'}}
             onChange={handleUploadedToFrame} multiple={true}/>    
             <div className='f_make_file_upload'
@@ -449,22 +363,6 @@ function Modals (props) {
                         Share
                     </span>
                 </div>
-                {/* <div className='f_select_link' onClick={getLinkProcess}>
-                    <span className='f_select_image'>
-                        <InsertLinkRoundedIcon/>
-                    </span>
-                    <span className='f_select_option'>
-                        Get Link
-                    </span>
-                </div>
-                <div className='f_select_move' onClick={moveToProcess}>
-                    <span className='f_select_image'>
-                        <DriveFileMoveOutlinedIcon/>
-                    </span>
-                    <span className='f_select_option'>
-                        Move To
-                    </span>
-                </div> */}
                 <div className='f_select_star' onClick={starProcess}>
                     <span className='f_select_image'>
                         <StarBorderOutlinedIcon/>
@@ -482,17 +380,6 @@ function Modals (props) {
                     </span>
                 </div> : ""}
                 <hr className='seperator_on_options'/>
-                <div className='f_select_copy' onClick={copyProcess}>
-                    <span className='f_select_image'>
-                        <ContentCopyOutlinedIcon/>
-                    </span>
-                    <span className='f_select_option'>
-                        Make a Copy
-                    </span>
-                    {props.copyQueue.legnth == 0 ? <span className='f_select_copy_close'>
-                        <CloseIcon/>
-                    </span> : ""}
-                </div>
                 <div className='f_select_download' onClick={downloadProcess}>
                     <span className='f_select_image'>
                         <OpenInNewIcon/>
@@ -522,11 +409,6 @@ function Modals (props) {
             </div> : ""}
             </div>); break;
 
-         returnee = (
-            <>
-
-            </>
-        ); break;
         case "trashConfirm" : returnee = (
             <>
             <div className='confirmDeletePopUp'></div>
@@ -602,8 +484,7 @@ function Modals (props) {
                            onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
                            onBlur={()=>setIpShown(false)}
                            onKeyDown={(e)=>enterHandle(e, "share")}
-                           autofocus
-                           /*onChange={handleShareIpChange}*//>
+                           autofocus/>
                 </div>
                 <div className='share_buttons'>
                     <div className='share_btn_cancel' onClick={()=>props.setSharePop(false)}>
@@ -624,7 +505,7 @@ function Modals (props) {
             <div className='share_overlay' onClick={()=>props.setRenamePop(false)}/>
             <div className='share_pop'>
                 <div className='share_text'>
-                    Rename {props.selects ? props.selects[0].data.filename : ""} to : 
+                    Rename "{props.selects ? props.selects[0].data.filename : ""}" to : 
                 </div>
                 <div className={('cfp_input' + (ipShown ? (()=>{return(" cfp_input_highlighted")})(): ""))} 
                 onClick={()=>document.getElementById("inputFieldShareF").focus()}>
@@ -646,19 +527,12 @@ function Modals (props) {
             </div>
             </>
         ); break;
-        case "copyPop" : returnee = (
-            <>
-                <div className='copyPop'>
-
-                </div>
-            </>
-        ); break;
         case "search_preview" : 
         searchAction(props.searchPop);
         returnee = (
         <>
             <div className='search_overlay' onClick={() => props.setSearchPop(false)}/>
-            <div className='search_pop' /*style={{height:(44 + (props.searchAnswers <= 5 ? props.searchAnswers.length * 40 : 200)) + "px"}}*/>
+            <div className='search_pop'>
                 <div className='f_make_whitespace'/>
                 {
                     (props.searchAnswers.length > 5 ? props.searchAnswers.filter((t, i) => i < 5) : [...props.searchAnswers, ...Array.apply(null, new Array(5 - props.searchAnswers.length))]).map(t => {
@@ -701,18 +575,3 @@ function Modals (props) {
 }
 
 export default Modals
-
-
-// function Modals(modalID) {
-//     const [openFmake, setFmake] = useState(false);
-
-//     const handlefMakeClose = () => {
-//         setFmake(false);
-//     }
-//   switch (modalID) {
-//     case 0 : break;
-//     case 1 : break;
-//     default : return (<p>Invalid Modal ID</p>)
-//   }
-    
-// }

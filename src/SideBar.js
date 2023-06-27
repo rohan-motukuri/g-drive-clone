@@ -26,7 +26,7 @@ function SideBar(props) {
     <div className='sidebar'>
         <Modals modalId="uploading" uploaderLedge = {props.uploaderLedge} 
                 uploaderState = {props.uploaderState} dummy = {props.dummy}
-                user={props.user} setUser={props.setUser} cQ = {props.cQ} isSideBar = {true}
+                user={props.user} setUser={props.setUser} isSideBar = {true}
                 thereMem = {props.thereMem} usedMem = {props.usedMem}/>
         <div className = 'sidebar_button' >
             

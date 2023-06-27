@@ -245,7 +245,7 @@
     }
 
 .cfp_input {
-    width: 350px; /* Was 260px for folder creation, Being overwritten for share, rename, etc */
+    width: 350px;
     height: 40px;
     margin: 0px auto;
 
@@ -434,7 +434,7 @@
     position: fixed;
     top:140px;
     right:100px;
-    height: 285px;
+    height: 250px;
     width: 270px;
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
@@ -449,7 +449,7 @@
     position: fixed;
     top:140px;
     right:100px;
-    height: 255px;
+    height: 215px;
     width: 270px;
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
@@ -541,19 +541,6 @@
     height: 1px;
 }
 
-/* Copy Pop */
-
-.copyPop {
-    position: fixed;
-    bottom:10px;
-    right:0px;
-    height: 50px;
-    width: 270px;
-    background-color:#fafa05;
-
-    z-index: 1;
-}
-
 /* Share */
 
 .share_overlay {
@@ -634,8 +621,6 @@
     background-color: rgba(209, 203, 203, 0.116);
     color: rgba(0, 0, 0, 0.781);
 }
-
-/* Search Options */
 
 
 /* Sign IN */

@@ -1,4 +1,3 @@
-import { height } from '@mui/system';
 import React, { useState, useEffect } from 'react'
 import "./css/window.css"
 
@@ -8,23 +7,13 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FolderIcon from '@mui/icons-material/Folder';
 import StarIcon from '@mui/icons-material/Star';
-import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-import CollectionsTwoToneIcon from '@mui/icons-material/CollectionsTwoTone';
-import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfTwoTone';
 
 import Modals from './Modals';
 
 import { db } from './firebase';
-import { Modal } from '@mui/material';
-
 
 function Window(props) {
 
-    const isEqualOrShared = (t) => {
-        return (t.data.user == props.user.email) || t.data.shared.includes(props.user.email);
-    }
-    
-    const [curDir, setCurDir] = useState("");
     const [grid, setGrid] = useState(true);
     
     const [selectView, setSelectView] = useState([]);
@@ -35,7 +24,6 @@ function Window(props) {
     const [sharePop, setSharePop] = useState(false);
     const [proceedShare, setProceedShare] = useState("");
     const [renamePop, setRenamePop] = useState(false);
-    const [copyPop, setCopyPop] = useState(false);
     const [trashPop, setTrashPop] = useState(false);
     const [deletePop, setDeletePop] = useState(false);
 
@@ -43,8 +31,12 @@ function Window(props) {
 
     const [pdfIcon, pngIcon, jpgIcon, txtIcon, docIcon] = [<img src={require("./icons/pdf_alt.png")}/>, <img src={require("./icons/img_alt.png")}/>, <img src={require("./icons/img_alt.png")}/>, <img src={require("./icons/txt_alt.png")}/>, <img src={require("./icons/doc_alt.png")}/>]
 
+    const isEqualOrShared = (t) => {
+        return (t.user == props.user.email) || t.shared.includes(props.user.email);
+    }
+
     const handleIndividualFileSelectForOptions = (e) => {
-        if(props.select[0].findIndex(t => t.id == e.id) == -1) props.select[1]([...props.select[0], e]) // Added to fix the bug of repeated adding to selects on multiclicking the individual options
+        if(props.select[0].findIndex(t => t.id == e.id) == -1) props.select[1]([...props.select[0], e])
         document.getElementById("SelectsEligible" + e.id).setAttribute('checked', true);
 
         props.fopts[1](true);
@@ -55,7 +47,6 @@ function Window(props) {
         if((indexToDelete = props.select[0].findIndex(t => t.id == e.id)) != -1) {
             props.select[0].splice(indexToDelete, 1);
             props.select[1](props.select[0])
-            // document.getElementById(e).setAttribute('checked', false);
         }
         else {
             props.select[1]([...props.select[0], e])
@@ -84,8 +75,6 @@ function Window(props) {
         return 0;
     }
 
-
-
     function file_card_preview(t, icon) {
         const img=(url)=>(<img src={url}/>);
 
@@ -112,7 +101,7 @@ function Window(props) {
 
     useEffect(() => {
       db.collection('files_db').onSnapshot(snap => {
-        setFiles(snap.docs.map(file => !file.data().deleted ? ({
+        setFiles(snap.docs.map(file => isEqualOrShared(file.data()) && !file.data().deleted ? ({
             id:file.id,
             data:file.data()
         }) : null).filter(t => t));
@@ -235,24 +224,16 @@ function Window(props) {
         switch(space) {
             case "my-drive" : {
                 return [
-                    sectionDisplay("Suggested", files.filter((t, i) => !t.data.folder && isEqualOrShared(t) && !t.data.trashed && !t.data.deleted && i < 20)
+                    sectionDisplay("Suggested", files.filter((t, i) => !t.data.folder && isEqualOrShared(t.data) && !t.data.trashed && !t.data.deleted && i < 20)
                     .sort((a, b) => b.data.timestamp - a.data.timestamp), true),
                     
                     ((files.findIndex(t => t.data.folder && !t.data.trashed) != -1) ? 
-                        sectionDisplay("Folders", files.filter(t => t.data.folder && !t.data.trashed && !t.data.deleted && isEqualOrShared(t))
+                        sectionDisplay("Folders", files.filter(t => t.data.folder && !t.data.trashed && !t.data.deleted && isEqualOrShared(t.data))
                             .sort(sortByLex), grid):null),
                     
                     ((files.findIndex(t => !t.data.folder ) != -1) ? 
-                        sectionDisplay("Files", files.filter(t=>!t.data.folder & !t.data.trashed && !t.data.deleted && isEqualOrShared(t))
+                        sectionDisplay("Files", files.filter(t=>!t.data.folder & !t.data.trashed && !t.data.deleted && isEqualOrShared(t.data))
                             .sort(sortByLex), grid):null)
-                    // (<>
-                    //     <div className='tableHeadings' style={{display:"grid", gridTemplateColumns:"45% 10% 30% 15%"}}>
-                    //         <span>Name</span>
-                    //         <span>Owner</span>
-                    //         <span>Uploaded</span>
-                    //         <span>Size</span>
-                    //     </div>
-                    // </>)
                 ]
             } break;
             case "shared" : {
@@ -292,7 +273,7 @@ function Window(props) {
             case "storage" : {
                 return [
                     sectionDisplay("Storage", files
-                        .filter(t => t.data.user == props.user.email && !t.data.trashed && !t.data.deleted)
+                        .filter(t => t.data.user == props.user.email && !t.data.trashed)
                         .sort(sortBySize), false)
                 ];
             } break;
@@ -302,14 +283,12 @@ function Window(props) {
     return (
     <div style={{width:100+"%"}}>
       {
-        props.fopts[0] ? <Modals modalId = "fOptions" selects = {props.select[0]} user={props.user} setSelects = {props.select[1]} setfoptions = {props.fopts[1]} setSharePop = {setSharePop} proceedShare = {proceedShare} setRenamePop={setRenamePop} setCopyPop = {setCopyPop} copyPop = {copyPop} space = {space} trashPop = {trashPop} setTrashPop = {setTrashPop}
-deletePop = {deletePop} setDeletePop = {setDeletePop} copyQueue = {props.cQ[0]} setCopyQueue = {props.cQ[1]}/>: ""
+        props.fopts[0] ? <Modals modalId = "fOptions" selects = {props.select[0]} user={props.user} setSelects = {props.select[1]} setfoptions = {props.fopts[1]} setSharePop = {setSharePop} proceedShare = {proceedShare} setRenamePop={setRenamePop} space = {space} trashPop = {trashPop} setTrashPop = {setTrashPop}
+deletePop = {deletePop} setDeletePop = {setDeletePop} />: ""
       } {
         sharePop ? <Modals modalId = "sharePop" selects = {props.select[0]} setSelects = {props.select[1]} setSharePop = {setSharePop} setProceedShare = {setProceedShare}/> : ""
       } {
-        renamePop ? <Modals modalId = "renamePop" selects = {props.select[0]} setSelects = {props.select[1]} setRenamePop = {setRenamePop} setfoptions = {props.fopts[1]}/>: ""
-      } {
-        copyPop ? <Modals modalId = "copyPop" selects = {props.select[0]} setSelects = {props.select[1]} setCopyPop = {setCopyPop} setfoptions = {props.fopts[1]}/> : ""
+        renamePop ? <Modals modalId = "renamePop" user={props.user} selects = {props.select[0]} setSelects = {props.select[1]} setRenamePop = {setRenamePop} setfoptions = {props.fopts[1]}/>: ""
       } {
         trashPop ? <Modals modalId = "trashConfirm" selects = {props.select[0]} setSelects = {props.select[1]} trashPop = {trashPop} setTrashPop = {setTrashPop} setfoptions = {props.fopts[1]} deletePop = {deletePop} setDeletePop = {setDeletePop} userName = {props.user.email}/> : ""
       } {
@@ -325,10 +304,6 @@ deletePop = {deletePop} setDeletePop = {setDeletePop} copyQueue = {props.cQ[0]} 
                 <span>
                     My Drive
                 </span>
-                    {/* <ArrowForwardIosOutlinedIcon/>
-                <span>
-                    POT Folder
-                </span> */}
             </>) : <span>{space[0].toUpperCase() + space.substr(1)}</span>}
               
           </div>
@@ -349,105 +324,6 @@ deletePop = {deletePop} setDeletePop = {setDeletePop} copyQueue = {props.cQ[0]} 
             {   
                 spacesDisplay()
             }
-            
-                        {/* <span className='window_section_boxes window_section_boxes_card'>
-                            <div className='window_boxes_activated window_box_card_file window_box_card'>
-                                <div className='window_box_card_texts'>
-                                    <span className='window_box_icon' onClick={()=>{}}>
-                                        {false?<InsertDriveFileIcon/>:<input id="checkbox1" type="checkbox"/>}
-                                    </span>
-                                    <span className='window_box_name'>
-                                        filenew.pdf
-                                    </span>
-                                    <span className='window_box_options'>
-                                        <MoreVertIcon/>
-                                    </span>
-                                </div>
-                                <span className='window_box_preview'>
-                                    <img src="https://icc.govt.nz/wp-content/uploads/2019/03/forms-banner.jpg"/>
-                                </span>
-                            </div> 
-                            <div className='window_box_card_file window_box_card'>
-                                <div className='window_box_card_texts'>
-                                    <span className='window_box_icon'>
-                                        {false?<InsertDriveFileIcon/>:<input type="checkbox"/>}
-                                    </span>
-                                    <span className='window_box_name'>
-                                        filenew.pdf
-                                    </span>
-                                    <span className='window_box_options'>
-                                        <MoreVertIcon/>
-                                    </span>
-                                </div>
-                                <span className='window_box_preview'>
-                                    <img src="https://icc.govt.nz/wp-content/uploads/2019/03/forms-banner.jpg"/>
-                                </span>
-                            </div> 
-                            <div className='window_box_card_folder window_box_card'>
-                                <div className='window_box_card_texts'>
-                                    <span className='window_box_icon'>
-                                        {false?<InsertDriveFileIcon/>:<input type="checkbox"/>}
-                                    </span>
-                                    <span className='window_box_name'>
-                                        filenew.pdf
-                                    </span>
-                                    <span className='window_box_options'>
-                                        <MoreVertIcon/>
-                                    </span>
-                                </div>
-                            </div>
-                        </span> */}
-            {/* <div className='window_section'>
-                <span className='window_section_title'> 
-                    Today
-                </span>
-                <span className='window_section_boxes window_section_boxes_list'>
-                    <div className='window_box_list window_boxes_activated'>
-                        <div className='window_box_list_texts'>
-                            <span className='window_box_icon'>
-                                {false?<InsertDriveFileIcon/>:<input type="checkbox"/>}
-                            </span>
-                            <span className='window_box_name'>
-                                filenew.pdf
-                            </span>
-                            <span className='window_box_owner'>
-                                me
-                            </span>
-                            <span className='window_box_modified'>
-                                Deb 20, 2023 me
-                            </span>
-                            <span className='window_box_size'>
-                                ---
-                            </span>
-                            <span className='window_box_options'>
-                                <MoreVertIcon/>
-                            </span>
-                        </div>
-                    </div>
-                    <div className='window_box_list'>
-                        <div className='window_box_list_texts'>
-                            <span className='window_box_icon'>
-                                <InsertDriveFileIcon/>
-                            </span>
-                            <span className='window_box_name'>
-                                filenew.pdf
-                            </span>
-                            <span className='window_box_owner'>
-                                me
-                            </span>
-                            <span className='window_box_modified'>
-                                Deb 20, 2023 me
-                            </span>
-                            <span className='window_box_size'>
-                                ---
-                            </span>
-                            <span className='window_box_options'>
-                                <MoreVertIcon/>
-                            </span>
-                        </div>
-                    </div>
-                </span>
-            </div> */}
         </div>
       </div>
     </div>
