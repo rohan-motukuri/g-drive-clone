@@ -21,6 +21,7 @@ This project is a Google Drive clone that aims to replicate both the functionali
 
 - React JS
 - Firebase
+- Material UI
 
 ## Features
 
@@ -38,10 +39,15 @@ This project is a Google Drive clone that aims to replicate both the functionali
 - Available Space Bar
 - Size Limiting Uploads
 
-These features effectively highlight the core functionalities of your project, showcasing a range of essential actions users can perform on their files within the Google Drive clone.
+These features effectively highlight the core functionalities of the project, showcasing a range of essential actions users can perform on their files within the Google Drive clone.
 
 ## Attributions
 
 - [Base Tutorial](https://www.youtube.com/watch?v=7BXU9qPGH2s) by [Camer Coder](https://www.youtube.com/@CamelCoder/featured)
 - [Material UI Icons & Avatar](https://mui.com/material-ui/material-icons/?theme=Two+tone)
 - [File Icons](https://icons8.com)
+
+## Post Script
+
+- Feel free to educate me on improvments over at [LinkedIn]()
+- The `firebase.js` file was removed from prior commits becuase of API Key exposure. You can use create your own firebase and link the config json.
