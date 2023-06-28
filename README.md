@@ -83,5 +83,5 @@ These features effectively highlight the core functionalities of the project, sh
 
 ## Post Script
 
-- Feel free to educate me on improvments over at [LinkedIn]()
+- Feel free to educate me on improvments over at [LinkedIn](https://www.linkedin.com/posts/rohan-motukuri_upskilling-nogpt-googledriveclone-activity-7079680859263430657-FZhS?utm_source=share&utm_medium=member_desktop)
 - The `firebase.js` file was removed from prior commits becuase of API Key exposure. You can use create your own firebase and link the config json.
