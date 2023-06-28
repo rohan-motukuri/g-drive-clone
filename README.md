@@ -13,7 +13,7 @@ This project is a Google Drive clone that aims to replicate both the functionali
   - Batch downloading
   - Effective and secure storage and database management
 
-## [Demo](https://youtu.be/1NAfI1Kk51U)
+## Demo - [YT](https://youtu.be/1NAfI1Kk51U)
 
 #### Main Splash Screen
 ![image](https://github.com/rohan-motukuri/g-drive-clone/assets/123802857/fdd338c2-6e00-44c0-95a1-78e7c1a9a52c)
