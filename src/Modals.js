@@ -273,7 +273,8 @@ function Modals (props) {
                     <input id="inputFieldCreateFolder" 
                     type="text" defaultValue="Untitled Folder" 
                     onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
-                    onBlur={()=>setIpShown(false)}/>
+                    onBlur={()=>setIpShown(false)}
+                    autocomplete="off" />
                 </div>
                 <div className='cfp_buttons'>
                     <div className='cfp_button_enter' 
@@ -484,7 +485,7 @@ function Modals (props) {
                            onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
                            onBlur={()=>setIpShown(false)}
                            onKeyDown={(e)=>enterHandle(e, "share")}
-                           autofocus/>
+                           autofocus autocomplete="off" />
                 </div>
                 <div className='share_buttons'>
                     <div className='share_btn_cancel' onClick={()=>props.setSharePop(false)}>
@@ -514,7 +515,7 @@ function Modals (props) {
                            onFocus={(e)=>{e.target.select(); setIpShown(true);}} 
                            onBlur={()=>setIpShown(false)}
                            onKeyDown={(e)=>enterHandle(e, "rename")}
-                           autofocus/> 
+                           autofocus autocomplete="off" /> 
                 </div>
                 <div className='share_buttons'>
                     <div className='share_btn_cancel' onClick={()=>props.setRenamePop(false)}>

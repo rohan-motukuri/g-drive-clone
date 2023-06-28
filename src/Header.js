@@ -27,7 +27,8 @@ function Header (props) {
         <div className= {'header_search' + (props.searchSee[0] ? " header_search_pressed" : '')} onClick={handleSearch}> 
           <span><SearchIcon/></span>
             <input id="globalSearchBar" type="text" placeholder='Search in Drive'
-                  onChange={searchRealTime}/>
+                  onChange={searchRealTime}
+                  autocomplete="off" />
           <span><TuneIcon/></span>
         </div>
 
