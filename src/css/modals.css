@@ -625,6 +625,14 @@
 
 /* Sign IN */
 
+.signInWarning {
+    margin-top: 30px;
+    background: #d943439e;
+    text-align: center;
+    color: whitesmoke;
+
+}
+
 .signInPop {
     position: absolute;
     left: 50%;

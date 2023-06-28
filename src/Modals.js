@@ -442,6 +442,8 @@ function Modals (props) {
                         <span>Go To Drive (Clone)</span>
                     </div>  
                 </div>
+
+                <div className='signInWarning'>The files will be deleted every 24 Hrs. Remember to not post any sensitive documents</div>
             </>
         ); break;
         case "userChanges" : returnee = (
