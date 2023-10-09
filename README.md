@@ -1,6 +1,6 @@
-## Notes
+# Cloud File Storage Platform - A Google Drive Clone
 
-This project is a Google Drive clone that aims to replicate both the functionality and appearance of Google Drive. It was developed as an #upskilling-project to familiarize myself with React JS and fundamental web development concepts. Throughout the project, I gained valuable insights into the following areas:
+This project is a Google Drive clone that aims to replicate both the functionality and appearance of Google Drive. It's been developed as an #upskilling-project to familiarize myself with React JS and fundamental web development concepts. Throughout the project, I gained valuable insights into the following areas:
 
 - Utilizing states in React
 - Implementing user authentication
