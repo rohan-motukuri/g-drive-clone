@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/dd7ba122-951b-4e49-b801-f90c3e438b90/deploy-status)](https://app.netlify.com/sites/google-drive-clone-rohan/deploys)
+
 # Cloud File Storage Platform - A Google Drive Clone
 
 This project is a Google Drive clone that aims to replicate both the functionality and appearance of Google Drive. It's been developed as an #upskilling-project to familiarize myself with React JS and fundamental web development concepts. Throughout the project, I gained valuable insights into the following areas:
